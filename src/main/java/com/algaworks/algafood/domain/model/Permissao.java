@@ -1,53 +1,48 @@
 package com.algaworks.algafood.domain.model;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
-public class Restaurante {
+public class Permissao {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false)
 	private String nome;
 	
-	@Column(name="taxa_frete")	
-	private BigDecimal taxaFrete;
-	
-	@ManyToOne
-	private Cozinha cozinha;
-	
+	@Column(nullable = false)
+	private String descricao;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public BigDecimal getTaxaFrete() {
-		return taxaFrete;
+
+	public String getDescricao() {
+		return descricao;
 	}
-	public void setTaxaFrete(BigDecimal taxaFrete) {
-		this.taxaFrete = taxaFrete;
+
+	public void setDescricao(String decricao) {
+		this.descricao = decricao;
 	}
-	public Cozinha getCozinha() {
-		return cozinha;
-	}
-	public void setCozinha(Cozinha cozinha) {
-		this.cozinha = cozinha;
-	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -55,6 +50,7 @@ public class Restaurante {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -63,7 +59,7 @@ public class Restaurante {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Restaurante other = (Restaurante) obj;
+		Permissao other = (Permissao) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
