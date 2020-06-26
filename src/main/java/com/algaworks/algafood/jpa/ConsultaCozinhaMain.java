@@ -18,11 +18,15 @@ public class ConsultaCozinhaMain {
 		
 		Cozinha cozinha1 = new Cozinha();
 		cozinha1.setNome("Brasileira");
-		cadastroCozinha.adicionar(cozinha1);
+		cadastroCozinha.salvar(cozinha1);
 		
 		Cozinha cozinha2 = new Cozinha();
 		cozinha2.setNome("Italiana");
-		cadastroCozinha.adicionar(cozinha2);
+		cadastroCozinha.salvar(cozinha2);
+		
+		Cozinha cozinha3 = new Cozinha();
+		cozinha3.setId(4L);
+		cadastroCozinha.excluir(cozinha3);
 		
 		for(Cozinha cozinha : cadastroCozinha.listar() ) {
 			System.out.println("Cozinha: " + cozinha.getId() + " - " + cozinha.getNome());

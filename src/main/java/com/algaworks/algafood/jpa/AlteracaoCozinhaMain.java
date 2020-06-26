@@ -19,7 +19,7 @@ public class AlteracaoCozinhaMain {
 		Cozinha cozinha1 = new Cozinha();
 		cozinha1.setNome("Brasileira uhhhhhh");
 		cozinha1.setId(1L);
-		cadastroCozinha.adicionar(cozinha1);		
+		cadastroCozinha.salvar(cozinha1);		
 		
 		for(Cozinha cozinha : cadastroCozinha.listar() ) {
 			System.out.println("Cozinha: " + cozinha.getId() + " - " + cozinha.getNome());
