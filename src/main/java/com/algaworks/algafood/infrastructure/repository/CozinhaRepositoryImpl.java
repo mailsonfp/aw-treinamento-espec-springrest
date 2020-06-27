@@ -35,8 +35,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository{
 	
 	@Override
 	@Transactional
-	public void remover(Cozinha cozinha) {
-		cozinha = buscar(cozinha.getId());
+	public void remover(Cozinha cozinha) {		
 		manager.remove(cozinha);
 	}
 	
