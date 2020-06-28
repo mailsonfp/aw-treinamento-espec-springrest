@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,14 @@ public class CadastroCozinhaService {
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
+	
+	public List<Cozinha> listar(){
+		return cozinhaRepository.listar();
+	}
+	
+	public List<Cozinha> listarPorNome(String nome){
+		return cozinhaRepository.consultarPorNome(nome);
+	}
 	
 	public Cozinha salvar(Cozinha cozinha) {
 		return cozinhaRepository.salvar(cozinha);
