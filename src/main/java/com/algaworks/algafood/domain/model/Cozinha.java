@@ -1,16 +1,24 @@
 package com.algaworks.algafood.domain.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+@JsonRootName("cozinha")
 @Entity
 public class Cozinha {
 	
+	//@JsonIgnore para que a propriedade não seja exibida no json
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	//@JsonProperty("nome_cozinha") para modificar o nome da propriedade retornada no Json
+	@Column(nullable = false)
 	private String nome;
 	
 	public Long getId() {
