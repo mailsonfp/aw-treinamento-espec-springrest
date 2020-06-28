@@ -1,9 +1,11 @@
 package com.algaworks.algafood.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
@@ -18,30 +20,29 @@ public class CadastroCozinhaService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public List<Cozinha> listar(){
-		return cozinhaRepository.listar();
+		return cozinhaRepository.findAll();
 	}
 	
-	public List<Cozinha> listarPorNome(String nome){
-		return cozinhaRepository.consultarPorNome(nome);
+	public Optional<Cozinha> buscar(Long cozinhaId) {
+		return cozinhaRepository.findById(cozinhaId);		
 	}
+	
+	/*
+	 * public List<Cozinha> listarPorNome(String nome){ return
+	 * cozinhaRepository.consultarPorNome(nome); }
+	 */
 	
 	public Cozinha salvar(Cozinha cozinha) {
-		return cozinhaRepository.salvar(cozinha);
-	}
-	
-	public Cozinha buscar(Long cozinhaId) {
-		return cozinhaRepository.buscar(cozinhaId);
-	}
+		return cozinhaRepository.save(cozinha);
+	}	
 	
 	public void remover(Long cozinhaId){		
 		try {
-			Cozinha cozinhaAtual = buscar(cozinhaId);
-			if(cozinhaAtual==null) {
-				throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar uma cozinha com o código: %d", cozinhaId));
-			}
-			cozinhaRepository.remover(cozinhaAtual);
+			cozinhaRepository.deleteById(cozinhaId);
+		}catch(EmptyResultDataAccessException e) {
+			throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar uma cozinha com o código: %d", cozinhaId));
 		}catch(DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("A cozinha com o código: %d não pode ser excluída porque está relacionada a um ou mais restaurantes.", cozinhaId));
+			throw new EntidadeEmUsoException(String.format("A cozinha com o código %d não pode ser excluída porque está relacionada a um ou mais restaurantes.", cozinhaId));
 		}
 		
 	}
