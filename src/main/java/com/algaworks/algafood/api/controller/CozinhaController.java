@@ -62,14 +62,14 @@ public class CozinhaController {
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
 		Optional<Cozinha> cozinhaAtual = cadastroCozinhaService.buscar(cozinhaId);
 				
-		if(cozinhaAtual.isPresent()) {
-			//cozinhaAtual.setNome(cozinha.getNome());
-			BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
-			Cozinha cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
-			return ResponseEntity.ok(cozinhaSalva);
+		if(!cozinhaAtual.isPresent()) {
+			return ResponseEntity.notFound().build();
 		}
+
+		BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
 		
-		return ResponseEntity.notFound().build();		
+		Cozinha cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
+		return ResponseEntity.ok(cozinhaSalva);	
 	}
 	
 	@DeleteMapping("/{cozinhaId}")
