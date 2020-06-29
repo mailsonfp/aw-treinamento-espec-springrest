@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +27,21 @@ public class CadastroRestauranteService {
 		return restauranteRepository.findAll();
 	}
 	
+	public List<Restaurante> listarPorTaxaEntrega(BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
+	}
+	
+	public List<Restaurante> listarPorNomeId(String nome, Long cozinhaId){
+		return restauranteRepository.consultarPorNomeId(nome, cozinhaId);
+	}
+
 	public Optional<Restaurante> buscar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId);		
 	}
+	
+	public List<Restaurante> listarPorNomeTaxaEntrega(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return restauranteRepository.findByNomeAndTaxaEntrega(nome,taxaInicial, taxaFinal);
+	}	 
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();

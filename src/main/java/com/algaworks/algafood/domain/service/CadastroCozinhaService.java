@@ -27,10 +27,11 @@ public class CadastroCozinhaService {
 		return cozinhaRepository.findById(cozinhaId);		
 	}
 	
-	/*
-	 * public List<Cozinha> listarPorNome(String nome){ return
-	 * cozinhaRepository.consultarPorNome(nome); }
-	 */
+	
+	public List<Cozinha> listarPorNome(String nome){
+		return cozinhaRepository.findByNomeContaining(nome);
+	}
+	 
 	
 	public Cozinha salvar(Cozinha cozinha) {
 		return cozinhaRepository.save(cozinha);

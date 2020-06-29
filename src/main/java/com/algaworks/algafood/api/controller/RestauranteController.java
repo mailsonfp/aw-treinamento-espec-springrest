@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -36,6 +38,24 @@ public class RestauranteController {
 	public List<Restaurante> listar(){
 		return cadastroRestauranteService.listar();
 	}
+	
+	@GetMapping("/por-taxa-frete")
+	public List<Restaurante> listarPorTaxaFrete(@RequestParam BigDecimal taxaInicial, @RequestParam BigDecimal taxaFinal){
+		return cadastroRestauranteService.listarPorTaxaEntrega(taxaInicial, taxaFinal);
+	}
+	
+	
+	@GetMapping("/por-nome-taxa-frete")
+	public List<Restaurante> listarPorNomeTaxaEntrega(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return cadastroRestauranteService.listarPorNomeTaxaEntrega(nome, taxaInicial, taxaFinal);
+	}
+	 
+	
+	@GetMapping("/por-nome")
+	public List<Restaurante> listarPorNome(@RequestParam String nome, @RequestParam Long cozinhaId){
+		return cadastroRestauranteService.listarPorNomeId(nome, cozinhaId);
+	}
+	
 	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
