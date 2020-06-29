@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +35,19 @@ public class CidadeController {
 	
 	@GetMapping("/{cidadeId}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId){
-		try {
-			Cidade cidade = cadastroCidadeService.buscar(cidadeId);
-			return ResponseEntity.ok(cidade);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
+		Optional<Cidade> cidade = cadastroCidadeService.buscar(cidadeId);
+		
+		if(!cidade.isPresent()) {
+			return ResponseEntity.notFound().build();			
 		}
+		
+		return ResponseEntity.ok(cidade.get());
 	}
 	
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade){		
-		try {
-			cidade = cadastroCidadeService.salvar(cidade);
-			return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
+		try {			
+			return ResponseEntity.status(HttpStatus.CREATED).body(cadastroCidadeService.salvar(cidade));
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}		
@@ -56,17 +57,16 @@ public class CidadeController {
     public ResponseEntity<?> atualizar(@PathVariable Long cidadeId,
         @RequestBody Cidade cidade) {
         try {
-			Cidade cidadeAtual = cadastroCidadeService.buscar(cidadeId);
+        	Cidade cidadeAtual = cadastroCidadeService.buscar(cidadeId).orElse(null);
 			
-			if (cidadeAtual != null) {
-				BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-				
-				cidadeAtual = cadastroCidadeService.salvar(cidadeAtual);
-				return ResponseEntity.ok(cidade);
+			if (cidadeAtual == null) {
+				return ResponseEntity.notFound().build();
 			}
 			
-			return ResponseEntity.notFound().build();
-		
+			BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+			
+			Cidade cidadeSalva = cadastroCidadeService.salvar(cidadeAtual);
+			return ResponseEntity.ok(cidadeSalva);					
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest()
 					.body(e.getMessage());

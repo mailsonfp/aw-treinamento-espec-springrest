@@ -1,8 +1,10 @@
 package com.algaworks.algafood.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -21,37 +23,31 @@ public class CadastroCidadeService {
 	private EstadoRepository estadoRepository;
 	
 	public List<Cidade> listar(){
-		return cidadeRepository.listar();
+		return cidadeRepository.findAll();
 	}
 	
-	public Cidade buscar(Long cidadeId) {
-		Cidade cidade = cidadeRepository.buscar(cidadeId);
-		
-		if(cidade==null) {
-			throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar a cidade com o código: %d", cidadeId));
-		}
-		
-		return cidade;
+	public Optional<Cidade> buscar(Long cidadeId) {
+	 	return cidadeRepository.findById(cidadeId);		
 	}
 	
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = estadoRepository.buscar(estadoId);
+		Optional<Estado> estado = estadoRepository.findById(estadoId);
 		
-		if (estado == null) {
+		if (!estado.isPresent()) {
 			throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar um estado com o código: %d", estadoId));
 		}
 		
-		cidade.setEstado(estado);
-		return cidadeRepository.salvar(cidade);
+		cidade.setEstado(estado.get());
+		return cidadeRepository.save(cidade);
 	}
 	
 	public void remover(Long cidadeId) {
-		Cidade cidade = cidadeRepository.buscar(cidadeId);
-		if(cidade==null) {
-			throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar a cidade com o código: %d", cidadeId));
+		try {
+			cidadeRepository.deleteById(cidadeId);
+		} catch (EmptyResultDataAccessException e) {
+			new EntidadeNaoEncontradaException(String.format("Não foi possível localizar uma cidade com o código: %d", cidadeId));
 		}
 		
-		cidadeRepository.remover(cidade);
 	}
 }

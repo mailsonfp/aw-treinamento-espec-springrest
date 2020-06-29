@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,40 +14,44 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
-import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
 //@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) para definir que todos os métodos da classe retornam Json
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {
-	
-	@Autowired
-	private CozinhaRepository cozinhaRepository;
-	
+public class CozinhaController {	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
 	//@GetMapping(produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) define qual o tipo de mídia retorna  método
 	@GetMapping	
 	public List<Cozinha> listar(){
-		return cozinhaRepository.listar();
+		return cadastroCozinhaService.listar();
 	}
+	
+	
+	@GetMapping("/por-nome")
+	public List<Cozinha> listarPorNome(@RequestParam String nome){
+		return cadastroCozinhaService.listarPorNome(nome);
+	}
+	 
+	
 	
 	@GetMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-		Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
-		if(cozinha != null) {
-			return ResponseEntity.ok(cozinha);
+		Optional<Cozinha> cozinha = cadastroCozinhaService.buscar(cozinhaId);
+		if(!cozinha.isPresent()) {
+			return ResponseEntity.notFound().build();
 		}
 		
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.ok(cozinha.get());
 	}
 	
 	@PostMapping
@@ -57,16 +62,16 @@ public class CozinhaController {
 	
 	@PutMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
-		Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+		Optional<Cozinha> cozinhaAtual = cadastroCozinhaService.buscar(cozinhaId);
 				
-		if(cozinhaAtual != null) {
-			//cozinhaAtual.setNome(cozinha.getNome());
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cadastroCozinhaService.salvar(cozinhaAtual);
-			return ResponseEntity.ok(cozinha);
+		if(!cozinhaAtual.isPresent()) {
+			return ResponseEntity.notFound().build();
 		}
+
+		BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
 		
-		return ResponseEntity.notFound().build();		
+		Cozinha cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
+		return ResponseEntity.ok(cozinhaSalva);	
 	}
 	
 	@DeleteMapping("/{cozinhaId}")

@@ -1,8 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,14 +39,42 @@ public class RestauranteController {
 		return cadastroRestauranteService.listar();
 	}
 	
+	@GetMapping("/por-taxa-frete")
+	public List<Restaurante> listarPorTaxaFrete(@RequestParam BigDecimal taxaInicial, @RequestParam BigDecimal taxaFinal){
+		return cadastroRestauranteService.listarPorTaxaEntrega(taxaInicial, taxaFinal);
+	}
+	
+	
+	@GetMapping("/por-nome-taxa-frete")
+	public List<Restaurante> listarPorNomeTaxaEntrega(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return cadastroRestauranteService.listarPorNomeTaxaEntrega(nome, taxaInicial, taxaFinal);
+	}
+	 
+	
+	@GetMapping("/por-nome")
+	public List<Restaurante> listarPorNome(@RequestParam String nome, @RequestParam Long cozinhaId){
+		return cadastroRestauranteService.listarPorNomeId(nome, cozinhaId);
+	}
+	
+	@GetMapping("/com-frete-gratis")
+	public List<Restaurante> listarlistarComFreteGratisNome(String nome){
+		return cadastroRestauranteService.listarComFreteGratisNome(nome);
+	}
+	
+	@GetMapping("/primeiro")
+	public Optional<Restaurante> buscarPrimeiro(){
+		return cadastroRestauranteService.buscarPrimeiro();
+	}
+	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
-		try {
-			Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);
-			return ResponseEntity.ok(restaurante);
-		} catch (Exception e) {
+		Optional<Restaurante> restaurante = cadastroRestauranteService.buscar(restauranteId);
+			
+		if(!restaurante.isPresent()) {
 			return ResponseEntity.notFound().build();
-		}		
+		}	
+		
+		return ResponseEntity.ok(restaurante.get());
 	}
 	
 	@PostMapping
@@ -58,29 +88,29 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}")
     public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
-        @RequestBody Restaurante restaurante) {
-        try {
-			Restaurante restauranteAtual = cadastroRestauranteService.buscar(restauranteId);
+        @RequestBody Restaurante restaurante) {		
+		try {
+			Restaurante restauranteAtual = cadastroRestauranteService.buscar(restauranteId).orElse(null);
 			
-			if (restauranteAtual != null) {
-				BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-				
-				restauranteAtual = cadastroRestauranteService.salvar(restauranteAtual);
-				return ResponseEntity.ok(restauranteAtual);
+			if (restauranteAtual==null) {
+				return ResponseEntity.notFound().build();				
 			}
 			
-			return ResponseEntity.notFound().build();
-		
+			BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+			
+			Restaurante restauranteSalvo = cadastroRestauranteService.salvar(restauranteAtual);
+			return ResponseEntity.ok(restauranteSalvo);	
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest()
 					.body(e.getMessage());
-		}
-    }
+		}		
+	}
 	
 	@PatchMapping("/{restauranteId}")
 	public ResponseEntity<?> atualizarPorCampos(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos){
 		
-		Restaurante restauranteAtual = cadastroRestauranteService.buscar(restauranteId);
+		Restaurante restauranteAtual = cadastroRestauranteService.buscar(restauranteId).orElse(null);
+		
 		if (restauranteAtual == null) {
 			ResponseEntity.notFound().build();
 		}
