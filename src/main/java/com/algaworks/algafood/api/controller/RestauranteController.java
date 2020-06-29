@@ -56,6 +56,15 @@ public class RestauranteController {
 		return cadastroRestauranteService.listarPorNomeId(nome, cozinhaId);
 	}
 	
+	@GetMapping("/com-frete-gratis")
+	public List<Restaurante> listarlistarComFreteGratisNome(String nome){
+		return cadastroRestauranteService.listarComFreteGratisNome(nome);
+	}
+	
+	@GetMapping("/primeiro")
+	public Optional<Restaurante> buscarPrimeiro(){
+		return cadastroRestauranteService.buscarPrimeiro();
+	}
 	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){

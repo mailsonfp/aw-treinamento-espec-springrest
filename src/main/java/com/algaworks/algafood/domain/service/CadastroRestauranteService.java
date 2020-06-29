@@ -40,8 +40,16 @@ public class CadastroRestauranteService {
 	}
 	
 	public List<Restaurante> listarPorNomeTaxaEntrega(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
-		return restauranteRepository.findByNomeAndTaxaEntrega(nome,taxaInicial, taxaFinal);
-	}	 
+		return restauranteRepository.findByNomeAndTaxaEntregaCriteria(nome,taxaInicial, taxaFinal);
+	}
+	
+	public List<Restaurante> listarComFreteGratisNome(String nome){				
+		return restauranteRepository.findComFreteGratis(nome);
+	}
+	
+	public Optional<Restaurante> buscarPrimeiro(){
+		return restauranteRepository.buscarPrimeiro();
+	}
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
