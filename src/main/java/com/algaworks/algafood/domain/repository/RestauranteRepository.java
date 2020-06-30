@@ -16,7 +16,11 @@ public interface RestauranteRepository
 			ResturanteRepositoryCustom, 
 			JpaSpecificationExecutor<Restaurante> {
 	// pra montar um método, tem que ter o prefixo definido pelo JPA, find, query, get, count e etc
-		
+	
+	// --- esse recurso evita o n1 em relacionamentos onde o fecth=Eager(tudo que termina em ToOne, ele faz uma sql com inner join  trazendo os dados juntos
+	//@Query("from Restaurante r join fetch r.cozinha left join fetch r.formasPagamento")
+	//List<Restaurante> findAll();
+	
 	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 	
 	//é possível usar as key-words para concaternar campos e manipular o where, Containing= like %%, between igual o between do SQL

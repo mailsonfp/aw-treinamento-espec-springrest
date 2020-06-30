@@ -1,13 +1,26 @@
 package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Restaurante {
@@ -21,8 +34,36 @@ public class Restaurante {
 	@Column(name="taxa_frete")	
 	private BigDecimal taxaFrete;
 	
-	@ManyToOne
+	//@JsonIgnoreProperties("hibernateLazyInitializer")
+	@JsonIgnore
+	@ManyToOne//(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
 	private Cozinha cozinha;
+	
+	@JsonIgnore
+	@Embedded
+	private Endereco endereco;
+	
+	@JsonIgnore
+	@CreationTimestamp
+	@Column(nullable = false, columnDefinition = "datetime")
+	private LocalDateTime dataCadastro;
+	
+	@JsonIgnore
+	@UpdateTimestamp
+	@Column(nullable = false, columnDefinition = "datetime")
+	private LocalDateTime dataAtualizacao;
+	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name="restaurante_forma_pagamento",
+			joinColumns = @JoinColumn(name = "restaurante_id"),
+			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+	private List<FormaPagamento> formasPagamento;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "restaurante")
+	private List<Produto> produtos = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -47,6 +88,36 @@ public class Restaurante {
 	}
 	public void setCozinha(Cozinha cozinha) {
 		this.cozinha = cozinha;
+	}
+	public List<FormaPagamento> getFormasPagamento() {
+		return formasPagamento;
+	}
+	public void setFormasPagamento(List<FormaPagamento> formasPagamento) {
+		this.formasPagamento = formasPagamento;
+	}
+	public Endereco getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+	public LocalDateTime getDataCadastro() {
+		return dataCadastro;
+	}
+	public void setDataCadastro(LocalDateTime dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}	
+	public LocalDateTime getDataAtualizacao() {
+		return dataAtualizacao;
+	}
+	public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+		this.dataAtualizacao = dataAtualizacao;
+	}
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
 	}
 	@Override
 	public int hashCode() {
