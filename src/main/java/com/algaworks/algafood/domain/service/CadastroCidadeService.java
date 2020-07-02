@@ -26,6 +26,7 @@ public class CadastroCidadeService {
 		return cidadeRepository.findAll();
 	}
 	
+	
 	public Optional<Cidade> buscar(Long cidadeId) {
 	 	return cidadeRepository.findById(cidadeId);		
 	}
