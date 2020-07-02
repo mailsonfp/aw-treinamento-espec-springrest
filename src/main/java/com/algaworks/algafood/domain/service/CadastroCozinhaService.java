@@ -16,6 +16,8 @@ import com.algaworks.algafood.domain.repository.CozinhaRepository;
 @Service
 public class CadastroCozinhaService {
 	
+	private static final String MSG_COZINHA_EM_USO = "A cozinha com o código %d não pode ser excluída porque está relacionada a um ou mais restaurantes.";
+	private static final String MSG_COZINHA_NAO_ENCONTRADA = "Não foi possível localizar uma cozinha com o código: %d";
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 	
@@ -27,6 +29,10 @@ public class CadastroCozinhaService {
 		return cozinhaRepository.findById(cozinhaId);		
 	}
 	
+	public Cozinha buscarThrow(Long cozinhaId) {
+		return cozinhaRepository.findById(cozinhaId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));		
+	}
 	
 	public List<Cozinha> listarPorNome(String nome){
 		return cozinhaRepository.findByNomeContaining(nome);
@@ -41,9 +47,9 @@ public class CadastroCozinhaService {
 		try {
 			cozinhaRepository.deleteById(cozinhaId);
 		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar uma cozinha com o código: %d", cozinhaId));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
 		}catch(DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("A cozinha com o código %d não pode ser excluída porque está relacionada a um ou mais restaurantes.", cozinhaId));
+			throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO, cozinhaId));
 		}
 		
 	}

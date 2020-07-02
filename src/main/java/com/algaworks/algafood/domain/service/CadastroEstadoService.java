@@ -16,6 +16,8 @@ import com.algaworks.algafood.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 	
+	private static final String MSG_ESTADO_EM_USO = "O estado com o código %d não pode ser excluído porque está relacionada a uma ou mais cidades.";
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não foi possível localizar um estado com o código: %d";
 	@Autowired
 	EstadoRepository estadoRepository;
 	
@@ -27,6 +29,11 @@ public class CadastroEstadoService {
 		return estadoRepository.findById(estadoId);
 	}
 	
+	public Estado buscarThrow(Long estadoId) {
+		return estadoRepository.findById(estadoId)
+			.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+	}
+	
 	public Estado salvar(Estado estado) {		
 		return estadoRepository.save(estado);
 	}
@@ -35,9 +42,9 @@ public class CadastroEstadoService {
 		try {
 			estadoRepository.deleteById(estadoId);
 		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não foi possível localizar um estado com o código: %d", estadoId));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
 		}catch(DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("O estado com o código %d não pode ser excluído porque está relacionada a uma ou mais cidades.", estadoId));
+			throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
 		}
 	}
 }
