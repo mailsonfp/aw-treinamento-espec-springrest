@@ -9,7 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 
@@ -17,7 +17,7 @@ import com.algaworks.algafood.domain.repository.EstadoRepository;
 public class CadastroEstadoService {
 	
 	private static final String MSG_ESTADO_EM_USO = "O estado com o código %d não pode ser excluído porque está relacionada a uma ou mais cidades.";
-	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não foi possível localizar um estado com o código: %d";
+
 	@Autowired
 	EstadoRepository estadoRepository;
 	
@@ -31,7 +31,7 @@ public class CadastroEstadoService {
 	
 	public Estado buscarThrow(Long estadoId) {
 		return estadoRepository.findById(estadoId)
-			.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+			.orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
 	}
 	
 	public Estado salvar(Estado estado) {		
@@ -42,7 +42,7 @@ public class CadastroEstadoService {
 		try {
 			estadoRepository.deleteById(estadoId);
 		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
+			throw new EstadoNaoEncontradoException(estadoId);
 		}catch(DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
 		}
