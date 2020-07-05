@@ -5,7 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import com.algaworks.algafood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("cozinha")
@@ -13,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class Cozinha {
 	
 	//@JsonIgnore para que a propriedade não seja exibida no json
+	@NotNull(groups = Groups.CozinhaId.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	//@JsonProperty("nome_cozinha") para modificar o nome da propriedade retornada no Json
+	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 	
