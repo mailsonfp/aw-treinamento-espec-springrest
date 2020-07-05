@@ -16,12 +16,22 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.algaworks.algafood.core.validation.Groups.CozinhaId;
+import com.algaworks.algafood.core.validation.Multiplo;
+import com.algaworks.algafood.core.validation.RestauranteFreteGratis;
+import com.algaworks.algafood.core.validation.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@RestauranteFreteGratis(valorField="taxaFrete", descricaoField="nome", descricaoObrigatoria="Frete Grátis")
 @Entity
 public class Restaurante {
 	
@@ -29,13 +39,22 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
+	@Column(nullable = false)
 	private String nome;
 	
+	@TaxaFrete
+	@Multiplo(numero=7) //- exemplo de anotação customizada com implementaçaõ de lógica
+	//@PositiveOrZero
+	//@DecimalMin("1")
 	@Column(name="taxa_frete")	
 	private BigDecimal taxaFrete;
 	
 	//@JsonIgnoreProperties("hibernateLazyInitializer")
-	//@JsonIgnore
+	//@JsonIgnore	
+	@Valid
+	@ConvertGroup(from=Default.class, to=CozinhaId.class)
+	@NotNull
 	@ManyToOne//(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private Cozinha cozinha;
