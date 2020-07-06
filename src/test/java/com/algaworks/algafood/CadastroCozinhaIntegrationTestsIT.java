@@ -18,7 +18,7 @@ import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CadastroCozinhaIntegrationTests {
+public class CadastroCozinhaIntegrationTestsIT {
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
