@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.RestauranteModelInputAssembler;
-import com.algaworks.algafood.api.assembler.RestauranteModelOutputAssembler;
+import com.algaworks.algafood.api.assembler.input.RestauranteModelInputAssembler;
+import com.algaworks.algafood.api.assembler.output.RestauranteModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.RestauranteModelInput;
 import com.algaworks.algafood.api.model.output.RestauranteModelOutput;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
@@ -110,11 +109,10 @@ public class RestauranteController {
 	@ResponseStatus(HttpStatus.CREATED)
     public RestauranteModelOutput atualizar(@PathVariable Long restauranteId,
         @RequestBody @Valid RestauranteModelInput restauranteInput) {		
-		Restaurante restaurante = restauranteModelInAssembler.toDomainObject(restauranteInput);
-		
 		Restaurante restauranteAtual = cadastroRestauranteService.buscarThrow(restauranteId);
 		
-		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+		restauranteModelInAssembler.copyToDomainObject(restauranteInput, restauranteAtual);
+		
 		try {
 			return restauranteModelOutAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
 		} catch (CozinhaNaoEncontradaException e) {

@@ -5,15 +5,15 @@ import java.math.BigDecimal;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import com.algaworks.algafood.core.validation.TaxaFrete;
+import javax.validation.constraints.PositiveOrZero;
 
 public class RestauranteModelInput {
 	
 	@NotBlank
 	private String nome;
 	
-	@TaxaFrete
+	@NotNull
+	@PositiveOrZero
 	private BigDecimal taxaFrete;
 	
 	@Valid
