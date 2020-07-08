@@ -214,7 +214,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				status.value(),
 				ProblemType.JSON_INVALIDO.getUri(),
 				ProblemType.JSON_INVALIDO.getTitle(),
-				String.format("Propriedade '%s' não existe no modelo", path),
+				String.format("Propriedade '%s' não deve ser informada", path),
 				MSG_ERRO_GENERICO);
 		
 		return handleExceptionInternal(ex, problema, headers, status, request);

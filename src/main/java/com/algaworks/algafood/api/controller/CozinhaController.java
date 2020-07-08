@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.input.CozinhaModelInputAssembler;
+import com.algaworks.algafood.api.assembler.output.CozinhaModelOutputAssembler;
+import com.algaworks.algafood.api.model.input.CozinhaModelInput;
+import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
@@ -28,36 +31,42 @@ public class CozinhaController {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
+	@Autowired
+	CozinhaModelOutputAssembler cozinhaModelOut;
+	
+	@Autowired
+	CozinhaModelInputAssembler cozinhaModelIn;
+	
 	//@GetMapping(produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) define qual o tipo de mídia retorna  método
 	@GetMapping	
-	public List<Cozinha> listar(){
-		return cadastroCozinhaService.listar();
+	public List<CozinhaModelOutput> listar(){
+		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listar());
 	}
-	
-	
+		
 	@GetMapping("/por-nome")
-	public List<Cozinha> listarPorNome(@RequestParam String nome){
-		return cadastroCozinhaService.listarPorNome(nome);
+	public List<CozinhaModelOutput> listarPorNome(@RequestParam String nome){
+		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listarPorNome(nome));
 	}	 	
 	
 	@GetMapping("/{cozinhaId}")
-	public Cozinha buscar(@PathVariable Long cozinhaId) {
-		return cadastroCozinhaService.buscarThrow(cozinhaId);		
+	public CozinhaModelOutput buscar(@PathVariable Long cozinhaId) {
+		return cozinhaModelOut.toModel(cadastroCozinhaService.buscarThrow(cozinhaId));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
-		return cadastroCozinhaService.salvar(cozinha);		
+	public CozinhaModelOutput adicionar(@RequestBody @Valid CozinhaModelInput cozinhaInput) {
+		Cozinha cozinha = cozinhaModelIn.toDomainObject(cozinhaInput);
+		return cozinhaModelOut.toModel(cadastroCozinhaService.salvar(cozinha));		
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha){
+	public CozinhaModelOutput atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaModelInput cozinhaInput){
 		Cozinha cozinhaAtual = cadastroCozinhaService.buscarThrow(cozinhaId);
-
-		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		
-		return cadastroCozinhaService.salvar(cozinhaAtual);		
+		cozinhaModelIn.copyToDomainObject(cozinhaInput, cozinhaAtual);
+		
+		return cozinhaModelOut.toModel(cadastroCozinhaService.salvar(cozinhaAtual));		
 	}
 	
 	/*
