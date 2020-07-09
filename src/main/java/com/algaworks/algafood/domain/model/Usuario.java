@@ -87,7 +87,13 @@ public class Usuario {
 	public void setGrupos(List<Grupo> grupos) {
 		this.grupos = grupos;
 	}
+	public boolean senhaCoincideCom(String senha) {
+	    return getSenha().equals(senha);
+	}
 
+	public boolean senhaNaoCoincideCom(String senha) {
+	    return !senhaCoincideCom(senha);
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

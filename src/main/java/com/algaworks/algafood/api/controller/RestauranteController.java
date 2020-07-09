@@ -33,6 +33,7 @@ import com.algaworks.algafood.api.assembler.input.RestauranteModelInputAssembler
 import com.algaworks.algafood.api.assembler.output.RestauranteModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.RestauranteModelInput;
 import com.algaworks.algafood.api.model.output.RestauranteModelOutput;
+import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.ValidacaoPatchException;
@@ -100,7 +101,7 @@ public class RestauranteController {
 		try {
 			Restaurante restaurante = restauranteModelInAssembler.toDomainObject(restauranteInput);
 			return restauranteModelOutAssembler.toModel(cadastroRestauranteService.salvar(restaurante));
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}		
 	}
@@ -115,7 +116,7 @@ public class RestauranteController {
 		
 		try {
 			return restauranteModelOutAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}					
 	}
@@ -140,7 +141,19 @@ public class RestauranteController {
 			throw new ValidacaoPatchException(bindingResult);
 		}
 	}
-
+	
+	@PutMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long restauranteId) {
+		cadastroRestauranteService.ativar(restauranteId);
+	}
+	
+	@DeleteMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long restauranteId) {
+		cadastroRestauranteService.inativar(restauranteId);
+	}
+	
 	@DeleteMapping("/{restauranteId}")
 	public void remover(@PathVariable Long restauranteId){
 		cadastroRestauranteService.remover(restauranteId);		

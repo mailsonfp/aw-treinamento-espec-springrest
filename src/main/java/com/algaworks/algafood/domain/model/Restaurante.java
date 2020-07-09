@@ -57,7 +57,9 @@ public class Restaurante {
 
 	@Embedded
 	private Endereco endereco;
-
+	
+	private Boolean ativo = Boolean.TRUE;
+	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataCadastro;
@@ -110,6 +112,12 @@ public class Restaurante {
 	}
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}	
+	public Boolean getAtivo() {
+		return ativo;
+	}
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 	public OffsetDateTime getDataCadastro() {
 		return dataCadastro;
@@ -128,6 +136,12 @@ public class Restaurante {
 	}
 	public void setProdutos(List<Produto> produtos) {
 		this.produtos = produtos;
+	}
+	public void ativar() {
+		setAtivo(true);
+	}
+	public void inativar() {
+		setAtivo(false);
 	}
 	@Override
 	public int hashCode() {
