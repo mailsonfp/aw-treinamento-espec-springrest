@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 
 @Service
@@ -26,6 +28,12 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuarioService;
+	
+	@Autowired
+	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 	
 	public List<Restaurante> listar(){
 		return restauranteRepository.findAll();
@@ -74,6 +82,17 @@ public class CadastroRestauranteService {
 	}
 	
 	@Transactional
+	public void remover(Long restauranteId) {
+		try {
+			restauranteRepository.deleteById(restauranteId);
+			restauranteRepository.flush();
+		} catch (EmptyResultDataAccessException e) {
+			throw new RestauranteNaoEncontradoException(restauranteId);
+		}
+	}
+
+	
+	@Transactional
 	public void ativar(Long restauranteId) {
 		Restaurante restauranteAtual = buscarThrow(restauranteId);
 		restauranteAtual.ativar();
@@ -86,12 +105,46 @@ public class CadastroRestauranteService {
 	}
 	
 	@Transactional
-	public void remover(Long restauranteId) {
-		try {
-			restauranteRepository.deleteById(restauranteId);
-			restauranteRepository.flush();
-		} catch (EmptyResultDataAccessException e) {
-			throw new RestauranteNaoEncontradoException(restauranteId);
-		}
+	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarThrow(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarThrow(formaPagamentoId);
+		
+		restaurante.adicionarFormaPagamento(formaPagamento);
 	}
+	
+	@Transactional
+	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarThrow(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarThrow(formaPagamentoId);
+		
+		restaurante.removerFormaPagamento(formaPagamento);
+	}
+	
+	@Transactional
+	public void abrirRestaurante(Long idRestaurante) {
+		Restaurante restauranteAtual = buscarThrow(idRestaurante);
+		restauranteAtual.abreRestaurante();
+	}
+	
+	@Transactional
+	public void fechaRestaurante(Long idRestaurante) {
+		Restaurante restauranteAtual = buscarThrow(idRestaurante);
+		restauranteAtual.fechaRestaurante();
+	}
+	
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long usuarioId) {
+	    Restaurante restaurante = buscarThrow(restauranteId);
+	    Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+	    
+	    restaurante.adicionarResponsavel(usuario);
+	}
+	
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+	    Restaurante restaurante = buscarThrow(restauranteId);
+	    Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+	    
+	    restaurante.removerResponsavel(usuario);
+	}	
 }

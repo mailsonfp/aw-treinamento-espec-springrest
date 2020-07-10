@@ -9,7 +9,9 @@ public class RestauranteModelOutput {
 	private BigDecimal taxaFrete;
 	private CozinhaModelOutput cozinha;
 	private Boolean ativo;
+	private Boolean aberto;
 	private EnderecoModelOutput endereco;
+
 	public Long getId() {
 		return id;
 	}
@@ -39,6 +41,12 @@ public class RestauranteModelOutput {
 	}
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	public Boolean getAberto() {
+		return aberto;
+	}
+	public void setAberto(Boolean aberto) {
+		this.aberto = aberto;
 	}
 	public EnderecoModelOutput getEndereco() {
 		return endereco;

@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.assembler.output;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class GrupoModelOutputAssembler {
         return modelMapper.map(grupo, GrupoModelOutput.class);
     }
     
-    public List<GrupoModelOutput> toCollectionModel(List<Grupo> grupos) {
+    public List<GrupoModelOutput> toCollectionModel(Collection<Grupo> grupos) {
         return grupos.stream()
                 .map(grupo -> toModel(grupo))
                 .collect(Collectors.toList());

@@ -159,6 +159,18 @@ public class RestauranteController {
 		cadastroRestauranteService.remover(restauranteId);		
 	}
 	
+	@PutMapping("/{restauranteId}/abertura")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void abreRestaurante(@PathVariable Long restauranteId) {
+		cadastroRestauranteService.abrirRestaurante(restauranteId);
+	}
+	
+	@PutMapping("/{restauranteId}/fechamento")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void fechaRestaurante(@PathVariable Long restauranteId) {
+		cadastroRestauranteService.fechaRestaurante(restauranteId);
+	}
+	
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
 		
