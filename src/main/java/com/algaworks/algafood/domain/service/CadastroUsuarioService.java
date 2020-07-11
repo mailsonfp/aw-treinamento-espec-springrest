@@ -32,14 +32,14 @@ public class CadastroUsuarioService {
         return usuarioRepository.save(usuario);
     }
     
-    public Usuario buscarOuFalhar(Long usuarioId) {
+    public Usuario buscarThrow(Long usuarioId) {
         return usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
     }
     
     @Transactional
     public void alterarSenha(Long usuarioId, String senhaAtual, String novaSenha) {
-        Usuario usuario = buscarOuFalhar(usuarioId);
+        Usuario usuario = buscarThrow(usuarioId);
         
         if (usuario.senhaNaoCoincideCom(senhaAtual)) {
             throw new NegocioException("Senha atual informada não coincide com a senha do usuário.");
@@ -50,7 +50,7 @@ public class CadastroUsuarioService {
     
     @Transactional
     public void associarGrupo(Long usuarioId, Long grupoId) {
-        Usuario usuario = buscarOuFalhar(usuarioId);
+        Usuario usuario = buscarThrow(usuarioId);
         Grupo grupo = cadastroGrupoService.buscarOuFalhar(grupoId);
         
         usuario.adicionarGrupo(grupo);
@@ -58,7 +58,7 @@ public class CadastroUsuarioService {
     
     @Transactional
     public void desassociarGrupo(Long usuarioId, Long grupoId) {
-        Usuario usuario = buscarOuFalhar(usuarioId);
+        Usuario usuario = buscarThrow(usuarioId);
         Grupo grupo = cadastroGrupoService.buscarOuFalhar(grupoId);
         
         usuario.removerGrupo(grupo);

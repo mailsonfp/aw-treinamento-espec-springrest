@@ -29,7 +29,7 @@ public class UsuarioGrupoController {
     
     @GetMapping
     public List<GrupoModelOutput> listar(@PathVariable Long usuarioId) {
-        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+        Usuario usuario = cadastroUsuario.buscarThrow(usuarioId);
         
         return grupoModelOut.toCollectionModel(usuario.getGrupos());
     }

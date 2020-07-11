@@ -135,7 +135,7 @@ public class CadastroRestauranteService {
 	@Transactional
 	public void associarResponsavel(Long restauranteId, Long usuarioId) {
 	    Restaurante restaurante = buscarThrow(restauranteId);
-	    Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+	    Usuario usuario = cadastroUsuarioService.buscarThrow(usuarioId);
 	    
 	    restaurante.adicionarResponsavel(usuario);
 	}
@@ -143,8 +143,18 @@ public class CadastroRestauranteService {
 	@Transactional
 	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
 	    Restaurante restaurante = buscarThrow(restauranteId);
-	    Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+	    Usuario usuario = cadastroUsuarioService.buscarThrow(usuarioId);
 	    
 	    restaurante.removerResponsavel(usuario);
-	}	
+	}
+	
+	@Transactional
+	public void ativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::ativar);
+	}
+	
+	@Transactional
+	public void inativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::inativar);
+	}
 }

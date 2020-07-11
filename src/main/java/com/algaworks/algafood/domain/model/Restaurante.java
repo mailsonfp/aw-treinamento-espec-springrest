@@ -184,6 +184,13 @@ public class Restaurante {
 	public boolean adicionarResponsavel(Usuario usuario) {
 	    return getResponsaveis().add(usuario);
 	}
+	public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+	    return getFormasPagamento().contains(formaPagamento);
+	}
+
+	public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+	    return !aceitaFormaPagamento(formaPagamento);
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
