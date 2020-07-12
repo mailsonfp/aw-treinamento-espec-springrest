@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -116,10 +117,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
+			WebRequest request) {
+		
+		Problema problema = retornaProblemaObjetosInvalidos(ex.getBindingResult(),
+				status,
+				ProblemType.PARAMETRO_INVALIDO.getUri(),
+				ProblemType.PARAMETRO_INVALIDO.getTitle(),
+				"Um ou mais parâmetros para realizar a consulta são inválidos.");		
+		
+	    return handleExceptionInternal(ex, problema, headers, status, request);
+	}
+	
+	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 	        HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
-		Problema problema = retornaProblemaObjetosInvalidos(ex.getBindingResult(),status);
+		Problema problema = retornaProblemaObjetosInvalidos(ex.getBindingResult(),
+				status,
+				ProblemType.JSON_INVALIDO.getUri(),
+				ProblemType.JSON_INVALIDO.getTitle(),
+				String.format("O json enviado no corpo da requisição não possui todos os campos obrigatórios."));		
 		
 	    return handleExceptionInternal(ex, problema, headers, status, request);
 	}  
@@ -129,12 +146,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		
-		Problema problema = retornaProblemaObjetosInvalidos(ex.getBindingResult(),status);
+		Problema problema = retornaProblemaObjetosInvalidos(ex.getBindingResult(),
+					status,
+					ProblemType.JSON_INVALIDO.getUri(),
+					ProblemType.JSON_INVALIDO.getTitle(),
+					String.format("O json enviado no corpo da requisição não possui todos os campos obrigatórios."));
 		
 	    return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}  
 	
-	private Problema retornaProblemaObjetosInvalidos(BindingResult bindingResult, HttpStatus status){
+	private Problema retornaProblemaObjetosInvalidos(BindingResult bindingResult, HttpStatus status, String uri, String title, String detail){
 		
 		List<Problema.ProblemaObjects> problemaField = bindingResult.getAllErrors().stream()
 				.map(objectError -> {
@@ -151,10 +172,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Problema problema = new Problema(
 				status.value(),
-				ProblemType.JSON_INVALIDO.getUri(),
-				ProblemType.JSON_INVALIDO.getTitle(),
-				String.format("O json enviado no corpo da requisição não possui todos os campos obrigatórios."),
-				"O json enviado no corpo da requisição não possui todos os campos obrigatórios.",
+				uri,
+				title,
+				detail,
+				detail,
 				problemaField);	
 		
 		return problema;

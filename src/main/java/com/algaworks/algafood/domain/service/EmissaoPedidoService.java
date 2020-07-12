@@ -12,13 +12,13 @@ import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.Usuario;
-import com.algaworks.algafood.domain.repository.PedidoRepository;
 
 @Service
 public class EmissaoPedidoService {
+	
 	@Autowired
-    private PedidoRepository pedidoRepository;
-    
+    PedidoService pedidoService;
+	
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 
@@ -35,7 +35,7 @@ public class EmissaoPedidoService {
 	private CadastroFormaPagamentoService cadastroFormaPagamento;
 	
     public Pedido buscarThrow(String pedidoCodigo) {
-        return pedidoRepository.findByCodigo(pedidoCodigo)
+        return pedidoService.buscarPorCodigo(pedidoCodigo)
             .orElseThrow(() -> new PedidoNaoEncontradoException(pedidoCodigo));
     }
     
@@ -47,7 +47,7 @@ public class EmissaoPedidoService {
         pedido.setTaxaFrete(pedido.getRestaurante().getTaxaFrete());
         pedido.calcularValorTotal();
 
-        return pedidoRepository.save(pedido);
+        return pedidoService.salvar(pedido);
     }
 
     private void validarPedido(Pedido pedido) {
