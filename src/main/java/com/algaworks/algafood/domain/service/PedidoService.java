@@ -8,9 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.algaworks.algafood.domain.filter.PedidoModelFilter;
+import com.algaworks.algafood.domain.filter.VendaDiariaModelFilter;
 import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
-import com.algaworks.algafood.domain.repository.filter.PedidoModelFilter;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 
 @Service
@@ -33,5 +35,9 @@ public class PedidoService {
 	
 	public Pedido salvar(Pedido pedido) {
 		return pedidoRepository.save(pedido);
+	}
+	
+	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaModelFilter filtro, String timeOffset){
+		return pedidoRepository.consultarVendasDiarias(filtro, timeOffset);
 	}
 }
