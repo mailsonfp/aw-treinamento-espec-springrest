@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.model.output;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+//@JsonFilter("pedidoFilter")
 public class PedidoResumoModelOutput {
 	
 	private String codigo;
