@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.algaworks.algafood.domain.exception.ProdutoFotoNaoEncontradaException;
 import com.algaworks.algafood.domain.model.ProdutoFoto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import com.algaworks.algafood.domain.service.ProdutoFotoStorageService.NovaFoto;
@@ -19,6 +20,11 @@ public class CadastroProdutoFotoService {
 	
 	@Autowired
 	private ProdutoFotoStorageService fotoStorageService;
+	
+	public ProdutoFoto buscarThrow(Long restauranteId, Long produtoId) {
+	    return produtoRepository.findFotoById(restauranteId, produtoId)
+	            .orElseThrow(() -> new ProdutoFotoNaoEncontradaException(restauranteId, produtoId));
+	}
 	
 	@Transactional
 	public ProdutoFoto salvar(ProdutoFoto produtoFoto, InputStream dadosArquivo) {
@@ -38,10 +44,21 @@ public class CadastroProdutoFotoService {
 		produtoFoto = produtoRepository.save(produtoFoto);
 		produtoRepository.flush();
 		
-		NovaFoto novaFoto = new NovaFoto(produtoFoto.getNomeArquivo(), dadosArquivo);
+		NovaFoto novaFoto = new NovaFoto(produtoFoto.getNomeArquivo(), produtoFoto.getContentType(), dadosArquivo);
 				
 		fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
 		
 		return produtoFoto;
+	}
+	
+	@Transactional
+	public void remover(Long restauranteId, Long produtoId) {
+		ProdutoFoto produtoFoto = buscarThrow(restauranteId, produtoId);
+		String nomeArquivo = produtoFoto.getNomeArquivo();
+		
+		produtoRepository.removeFoto(produtoFoto);
+		produtoRepository.flush();
+		
+		fotoStorageService.remover(nomeArquivo);
 	}
 }
