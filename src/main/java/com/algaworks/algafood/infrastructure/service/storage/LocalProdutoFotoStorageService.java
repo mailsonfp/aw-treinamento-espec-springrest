@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
 import com.algaworks.algafood.core.storage.StorageProperties;
-import com.algaworks.algafood.domain.exception.StorageException;
 import com.algaworks.algafood.domain.service.ProdutoFotoStorageService;
 
 public class LocalProdutoFotoStorageService implements ProdutoFotoStorageService {
