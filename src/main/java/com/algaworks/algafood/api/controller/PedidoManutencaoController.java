@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.service.ManutencaoPedidoService;
+import com.algaworks.algafood.domain.service.PedidoManutencaoService;
 
 @RestController
 @RequestMapping(value = "/pedidos/{pedidoCodigo}")
 public class PedidoManutencaoController {
 	
 	@Autowired
-	ManutencaoPedidoService manutencaoPedidoService;
+	PedidoManutencaoService manutencaoPedidoService;
 	
 	@PutMapping("/confirmacao")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
