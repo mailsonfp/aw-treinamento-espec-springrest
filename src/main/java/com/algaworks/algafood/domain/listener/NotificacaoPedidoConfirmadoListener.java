@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.service;
+package com.algaworks.algafood.domain.listener;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,25 +6,24 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
+import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.domain.service.EnvioEmailService;
 import com.algaworks.algafood.domain.service.EnvioEmailService.Mensagem;
 
-@Service
-public class ManutencaoPedidoService {
-
-	@Autowired
-	EmissaoPedidoService emissaoPedidoService;
+@Component
+public class NotificacaoPedidoConfirmadoListener {
 	
 	@Autowired
 	EnvioEmailService envioEmailService;
 	
-	@Transactional
-	public void confirmarPedido(String pedidoCodigo) {
-		Pedido pedido =  emissaoPedidoService.buscarThrow(pedidoCodigo);
-		pedido.confirmarPedido();
+	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+	public void enviarEmailConfirmacaoPedido(PedidoConfirmadoEvent eventoConfirmacao) {
+		Pedido pedido = eventoConfirmacao.getPedido();
 		
 		Set<String> destinatarios = retornaDestinatarios(pedido);
 		
@@ -38,7 +37,7 @@ public class ManutencaoPedidoService {
 		
 		envioEmailService.enviar(mensagem);
 	}
-
+	
 	private Map<String, Object> retornaVariaveis(Pedido pedido) {
 		Map<String, Object> variaveis = new HashMap<String, Object>();
 		
@@ -51,17 +50,5 @@ public class ManutencaoPedidoService {
 		destinatarios.add(pedido.getCliente().getEmail());
 		destinatarios.add("mailsonfp@gmail.com");
 		return destinatarios;
-	}
-	
-	@Transactional
-	public void entregarPedido(String pedidoCodigo) {
-		Pedido pedido =  emissaoPedidoService.buscarThrow(pedidoCodigo);
-		pedido.entregarPedido();
-	}
-	
-	@Transactional
-	public void cancelarPedido(String pedidoCodigo) {
-		Pedido pedido =  emissaoPedidoService.buscarThrow(pedidoCodigo);
-		pedido.cancelarPedido();
 	}
 }

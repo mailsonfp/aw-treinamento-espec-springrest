@@ -21,11 +21,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
+import com.algaworks.algafood.domain.event.PedidoCanceladoEvent;
+import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.exception.NegocioException;
 
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -207,6 +210,8 @@ public class Pedido {
 	public void confirmarPedido() {
 		setStatus(StatusPedido.CONFIRMADO);
 		setDataEntrega(OffsetDateTime.now());
+		
+		registerEvent(new PedidoConfirmadoEvent(this));
 	}	
 	public void entregarPedido() {
 		setStatus(StatusPedido.ENTREGUE);
@@ -215,6 +220,8 @@ public class Pedido {
 	public void cancelarPedido() {
 		setStatus(StatusPedido.CANCELADO);
 		setDataCancelamento(OffsetDateTime.now());
+		
+		registerEvent(new PedidoCanceladoEvent(this));
 	}
 	@PrePersist	
 	public void gerarCodigo() {
