@@ -1,11 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,12 +50,94 @@ public class FormaPagamentoController {
         return formaPagamentoOut.toCollectionModel(todasFormasPagamentos);
     }
     
+    @GetMapping("/com-cache")
+    public ResponseEntity<List<FormaPagamentoModelOutput>> listarComCash() {
+    	
+        List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
+        
+        List<FormaPagamentoModelOutput> listaFormasPagamento = formaPagamentoOut.toCollectionModel(todasFormasPagamentos);
+        
+        return ResponseEntity.ok()
+        		.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+        		.body(listaFormasPagamento);
+    }
+    
+    /*@GetMapping
+	public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+		
+		String eTag = "0";
+		
+		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+		
+		if (dataUltimaAtualizacao != null) {
+			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+		}
+		
+		if (request.checkNotModified(eTag)) {
+			return null;
+		}
+		
+		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
+		
+		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembler
+				.toCollectionModel(todasFormasPagamentos);
+		
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+				.eTag(eTag)
+				.body(formasPagamentosModel);
+	}*/
+    
     @GetMapping("/{formaPagamentoId}")
     public FormaPagamentoModelOutput buscar(@PathVariable Long formaPagamentoId) {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarThrow(formaPagamentoId);
         
         return formaPagamentoOut.toModel(formaPagamento);
     }
+    
+    @GetMapping("com-cache/{formaPagamentoId}")
+    public ResponseEntity<FormaPagamentoModelOutput> buscarComCache(@PathVariable Long formaPagamentoId) {
+        FormaPagamento formaPagamento = cadastroFormaPagamento.buscarThrow(formaPagamentoId);
+        
+        return ResponseEntity.ok()
+//        		.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+        		.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+//        		.cacheControl(CacheControl.noCache()) ao fazer cache sempre precisa validar, sempre está em stale
+//        		.cacheControl(CacheControl.noStore()) desativa o cache, não vai armazenar ninguém
+//        		.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+        		.body(formaPagamentoOut.toModel(formaPagamento));
+    }
+    
+    /**@GetMapping("/{formaPagamentoId}")
+	public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId,
+	        ServletWebRequest request) {
+	    
+	    ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+	    
+	    String eTag = "0";
+	    
+	    OffsetDateTime dataAtualizacao = formaPagamentoRepository
+	            .getDataAtualizacaoById(formaPagamentoId);
+	    
+	    if (dataAtualizacao != null) {
+	        eTag = String.valueOf(dataAtualizacao.toEpochSecond());
+	    }
+	    
+	    if (request.checkNotModified(eTag)) {
+	        return null;
+	    }
+	    
+	    FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+	    
+	    FormaPagamentoModel formaPagamentoModel = formaPagamentoModelAssembler.toModel(formaPagamento);
+	    
+	    return ResponseEntity.ok()
+	            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+	            .eTag(eTag)
+	            .body(formaPagamentoModel);
+	}*/
+    
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
