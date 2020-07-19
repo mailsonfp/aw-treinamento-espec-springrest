@@ -22,7 +22,7 @@ function fecharRestaurante() {
 
 function consultar() {
   $.ajax({
-    url: "http://localhost:8080/formas-pagamento",
+    url: "http://localhost:8080/formas-pagamento/com-cache",
     type: "get",
 
     success: function(response) {
