@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.algaworks.algafood.api.assembler.input.ProdutoFotoModelInput;
 import com.algaworks.algafood.api.assembler.output.ProdutoFotoModelOutputAssembler;
 import com.algaworks.algafood.api.model.output.ProdutoFotoModelOutput;
+import com.algaworks.algafood.api.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.ProdutoFoto;
@@ -37,7 +38,7 @@ import com.algaworks.algafood.domain.service.ProdutoFotoStorageService.FotoRecup
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-public class RestauranteProdutoFotoController {
+public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 	
 	@Autowired
 	CadastroProdutoFotoService cadastroProdutoFotoService;
@@ -57,7 +58,8 @@ public class RestauranteProdutoFotoController {
 	}
 	
 	@GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
-	public ResponseEntity<?> buscarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+	public ResponseEntity<?> buscarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader)
+			throws HttpMediaTypeNotAcceptableException {
 		try {
 			ProdutoFoto produtoFoto = cadastroProdutoFotoService.buscarThrow(restauranteId, produtoId);
 			FotoRecuperada fotoRecuperada = produtoFotoStorage.recuperar(produtoFoto.getNomeArquivo());
@@ -84,7 +86,9 @@ public class RestauranteProdutoFotoController {
 
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ProdutoFotoModelOutput atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @Valid ProdutoFotoModelInput fotoProdutoInput) throws IOException {
+	public ProdutoFotoModelOutput atualizarFoto(@PathVariable Long restauranteId, 
+			@PathVariable Long produtoId,
+			@Valid ProdutoFotoModelInput fotoProdutoInput) throws IOException {
 		
 		Produto produto = cadastroProdutoService.buscarThrow(restauranteId, produtoId);
 		

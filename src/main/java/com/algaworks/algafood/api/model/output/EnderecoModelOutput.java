@@ -1,12 +1,24 @@
 package com.algaworks.algafood.api.model.output;
 
-public class EnderecoModelOutput {
+import io.swagger.annotations.ApiModelProperty;
 
+public class EnderecoModelOutput {
+	
+	@ApiModelProperty(example = "00000-000", required = true)
 	private String cep;
+	
+	@ApiModelProperty(example = "Avenida Paulista", required = true)
 	private String logradouro;
+	
+	@ApiModelProperty(example = "0000", required = true)
 	private String numero;
+	
+	@ApiModelProperty(example = "Apartamento 000")
 	private String complemento;
+	
+	@ApiModelProperty(example = "Nome do Bairro", required = true)
 	private String bairro;
+	
 	private CidadeResumoModel cidade;
 
 	public String getCep() {

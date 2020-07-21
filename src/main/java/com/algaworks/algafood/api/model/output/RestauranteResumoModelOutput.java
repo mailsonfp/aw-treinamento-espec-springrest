@@ -1,8 +1,15 @@
 package com.algaworks.algafood.api.model.output;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class RestauranteResumoModelOutput {
+	
+	@ApiModelProperty(example = "1")
 	private Long id;
+	
+	@ApiModelProperty(example = "Pizzaria da Cher")
     private String nome;
+	
 	public Long getId() {
 		return id;
 	}

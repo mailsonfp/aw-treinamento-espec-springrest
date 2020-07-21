@@ -24,6 +24,7 @@ import com.algaworks.algafood.api.assembler.output.PedidoResumoModelOutputAssemb
 import com.algaworks.algafood.api.model.input.PedidoModelInput;
 import com.algaworks.algafood.api.model.output.PedidoModelOutput;
 import com.algaworks.algafood.api.model.output.PedidoResumoModelOutput;
+import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -34,9 +35,12 @@ import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.domain.service.PedidoService;
 import com.google.common.collect.ImmutableMap;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping(value = "/pedidos")
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoService pedidoService;
@@ -95,6 +99,9 @@ public class PedidoController {
         return pedidoPage;
     }
     
+    @ApiImplicitParams({
+    	@ApiImplicitParam(value = "propriedades que devem ser retornadas na resposta(ex: nome,telefone)", name = "campos", paramType = "query", type = "string")
+    })
     @GetMapping("/{pedidoCodigo}")
     public PedidoModelOutput buscar(@PathVariable String pedidoCodigo) {
         Pedido pedido = emissaoPedido.buscarThrow(pedidoCodigo);

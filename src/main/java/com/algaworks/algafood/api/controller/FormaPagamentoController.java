@@ -23,13 +23,14 @@ import com.algaworks.algafood.api.assembler.input.FormaPagamentoModelInputAssemb
 import com.algaworks.algafood.api.assembler.output.FormaPagamentoModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.FormaPagamentoModelInput;
 import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
+import com.algaworks.algafood.api.openapi.controller.FormaPagamentoControllerOpenApi;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 
 @RestController
 @RequestMapping("/formas-pagamento")
-public class FormaPagamentoController {
+public class FormaPagamentoController implements FormaPagamentoControllerOpenApi{
 	
 	@Autowired
     private FormaPagamentoRepository formaPagamentoRepository;

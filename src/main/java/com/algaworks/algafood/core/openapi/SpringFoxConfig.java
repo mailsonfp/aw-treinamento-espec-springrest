@@ -3,21 +3,31 @@ package com.algaworks.algafood.core.openapi;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
+import com.algaworks.algafood.api.model.output.PedidoResumoModelOutput;
+import com.algaworks.algafood.api.openapi.model.CozinhasPageModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.PedidosPageResumoModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -48,12 +58,28 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.globalResponseMessage(RequestMethod.POST, getGlobalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.PUT, getGlobalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.DELETE, getGlobalDeleteResponseMessages())
+				/*.globalOperationParameters(Arrays.asList(
+						new ParameterBuilder()
+							.name("campos")
+							.description("propriedades que devem ser retornadas na resposta(ex: nome,telefone)")
+							.parameterType("query")
+							.modelRef(new ModelRef("string"))
+							.build()))*/
 				.useDefaultResponseMessages(false)
 				.additionalModels(typeResolver.resolve(Problema.class))
+				.ignoredParameterTypes(ServletRequest.class)
+				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaModelOutput.class), CozinhasPageModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, PedidoResumoModelOutput.class), PedidosPageResumoModelOpenApi.class))
 				.apiInfo(getApiInfo())
 				.tags(
 					new Tag("Cidades", "Responsável por armazenar todos os endpoints pertencentes a cidades"),
-					new Tag("Grupos", "Responsável por armazenar todos os endpoints pertencentes a Grupos de Usuário"));
+					new Tag("Grupos", "Responsável por armazenar todos os endpoints pertencentes a Grupos de Usuário"),
+					new Tag("Cozinhas", "Responsável por armazenar todos os endpoints pertencentes a Cozinhas"),
+			        new Tag("Formas de pagamento", "Responsável por armazenar todos os endpoints pertencentes a Formas de Pagmento"),
+			        new Tag("Restaurantes", "Responsável por armazenar todos os enpoints pertencentes a restaurantes"),
+			        new Tag("Produtos", "Responsável por armazenar todos os enpoints pertencentes a restaurantes"),
+			        new Tag("Relatórios", "Responsável por armazenar todos os endpoints que retornam relatórios"));
 	}
 	
 	private List<ResponseMessage> getGlobalResponseMessage(){

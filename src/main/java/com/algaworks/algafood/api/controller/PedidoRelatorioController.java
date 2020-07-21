@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.openapi.controller.PedidoRelatorioControllerOpenApi;
 import com.algaworks.algafood.domain.filter.VendaDiariaModelFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.PedidoService;
@@ -18,7 +19,7 @@ import com.algaworks.algafood.domain.service.VendaReportService;
 
 @RestController
 @RequestMapping(path = "/pedidos/relatorios")
-public class PedidoRelatorioController {
+public class PedidoRelatorioController implements PedidoRelatorioControllerOpenApi {
 
 	@Autowired
 	private PedidoService pedidoService;

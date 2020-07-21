@@ -3,15 +3,30 @@ package com.algaworks.algafood.api.model.output;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import io.swagger.annotations.ApiModelProperty;
+
 //@JsonFilter("pedidoFilter")
 public class PedidoResumoModelOutput {
 	
+	@ApiModelProperty(example = "Nome do Bairro", required = true)
 	private String codigo;
+	
+	@ApiModelProperty(example = "298.90")
     private BigDecimal subtotal;
+	
+	@ApiModelProperty(example = "10.00")
     private BigDecimal taxaFrete;
+	
+
+	@ApiModelProperty(example = "308.90")
     private BigDecimal valorTotal;
+	
+	@ApiModelProperty(example = "CRIADO")
     private String status;
+	
+	@ApiModelProperty(example = "2019-12-01T20:34:04Z")
     private OffsetDateTime dataCriacao;
+	
     private RestauranteResumoModelOutput restaurante;
     private UsuarioModelOutput cliente;
 	public String getCodigo() {
