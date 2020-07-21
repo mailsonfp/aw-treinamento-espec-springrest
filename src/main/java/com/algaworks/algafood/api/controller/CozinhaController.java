@@ -25,13 +25,14 @@ import com.algaworks.algafood.api.assembler.input.CozinhaModelInputAssembler;
 import com.algaworks.algafood.api.assembler.output.CozinhaModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.CozinhaModelInput;
 import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
+import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
 //@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) para definir que todos os métodos da classe retornam Json
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {	
+public class CozinhaController implements CozinhaControllerOpenApi {	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	

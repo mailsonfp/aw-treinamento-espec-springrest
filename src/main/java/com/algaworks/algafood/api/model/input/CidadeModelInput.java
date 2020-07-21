@@ -4,7 +4,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class CidadeModelInput {
+	
+	@ApiModelProperty(example="Campinas", required = true)
 	@NotBlank
     private String nome;
     

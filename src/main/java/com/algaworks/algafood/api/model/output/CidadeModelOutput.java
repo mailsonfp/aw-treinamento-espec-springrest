@@ -1,7 +1,14 @@
 package com.algaworks.algafood.api.model.output;
 
+import io.swagger.annotations.ApiModelProperty;
+
+//@ApiModel(value="Cidade", description = "Representa o retorno de uma cidade")
 public class CidadeModelOutput {
+	
+	@ApiModelProperty(value = "Id da cidade", example = "1")
 	private Long id;
+	
+	@ApiModelProperty(example = "Campinas")
     private String nome;
     private EstadoModelOutput estado;
 	public Long getId() {

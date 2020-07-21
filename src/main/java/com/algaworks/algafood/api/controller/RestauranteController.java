@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -34,6 +35,7 @@ import com.algaworks.algafood.api.assembler.output.RestauranteModelOutputAssembl
 import com.algaworks.algafood.api.model.input.RestauranteModelInput;
 import com.algaworks.algafood.api.model.output.RestauranteModelOutput;
 import com.algaworks.algafood.api.model.view.RestauranteView;
+import com.algaworks.algafood.api.openapi.controller.RestauranteControllerOpenApi;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -47,8 +49,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@CrossOrigin(origins = "http://127.0.0.1:8000", maxAge = 10)// --- sem a definição de orgins, aceita requisição de qualquer origem
 @RestController
-@RequestMapping("/restaurantes")
-public class RestauranteController {
+@RequestMapping(path = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteController implements RestauranteControllerOpenApi {
 	
 	@Autowired
 	private CadastroRestauranteService cadastroRestauranteService;
@@ -245,5 +247,6 @@ public class RestauranteController {
 		} catch (Exception e) {
 			throw new HttpMessageNotReadableException(e.getMessage(), ExceptionUtils.getRootCause(e), serverHttpRequest);
 		}
-	}	
+	}
+
 }
