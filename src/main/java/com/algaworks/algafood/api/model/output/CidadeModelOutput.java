@@ -1,9 +1,13 @@
 package com.algaworks.algafood.api.model.output;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import io.swagger.annotations.ApiModelProperty;
 
+@Relation(collectionRelation = "cidades")
 //@ApiModel(value="Cidade", description = "Representa o retorno de uma cidade")
-public class CidadeModelOutput {
+public class CidadeModelOutput extends RepresentationModel<CidadeModelOutput> {
 	
 	@ApiModelProperty(value = "Id da cidade", example = "1")
 	private Long id;

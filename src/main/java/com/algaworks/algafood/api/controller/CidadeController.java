@@ -1,10 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +40,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	CidadeModelInputAssembler cidadeModelIn;
 	
 	@GetMapping
-	public List<CidadeModelOutput> listar(){
+	public CollectionModel<CidadeModelOutput> listar(){
 		return cidadeModelOut.toCollectionModel(cadastroCidadeService.listar());
 	}
 	
@@ -55,6 +54,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	public CidadeModelOutput adicionar(@RequestBody @Valid CidadeModelInput cidadeInput){
 		try {
 			Cidade cidade = cidadeModelIn.toDomainObject(cidadeInput);
+			
 			return cidadeModelOut.toModel(cadastroCidadeService.salvar(cidade));
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
