@@ -1,27 +1,42 @@
 package com.algaworks.algafood.api.assembler.output;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
+import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
+import com.algaworks.algafood.api.util.AlgaLinks;
 import com.algaworks.algafood.domain.model.Cozinha;
 
 @Component
-public class CozinhaModelOutputAssembler {
+public class CozinhaModelOutputAssembler  extends RepresentationModelAssemblerSupport<Cozinha, CozinhaModelOutput>{
 	@Autowired
     private ModelMapper modelMapper;
     
+	@Autowired
+	private AlgaLinks algaLinks;
+	
+	public CozinhaModelOutputAssembler() {
+		super(CozinhaController.class, CozinhaModelOutput.class);
+	}
+	
     public CozinhaModelOutput toModel(Cozinha cozinha) {
-        return modelMapper.map(cozinha, CozinhaModelOutput.class);
+    	CozinhaModelOutput cozinhaModel = createModelWithId(cozinha.getId(), cozinha);
+    	
+    	modelMapper.map(cozinha, cozinhaModel);
+    	
+    	cozinhaModel.add(algaLinks.linkToCozinhas("cozinhas"));
+    	
+    	return cozinhaModel;
     }
     
-    public List<CozinhaModelOutput> toCollectionModel(List<Cozinha> cozinhas) {
-        return cozinhas.stream()
-                .map(cozinha -> toModel(cozinha))
-                .collect(Collectors.toList());
-    }
+    @Override
+	public CollectionModel<CozinhaModelOutput> toCollectionModel(Iterable<? extends Cozinha> entities) {
+		return super.toCollectionModel(entities)
+			.add(WebMvcLinkBuilder.linkTo(CozinhaController.class).withSelfRel());
+	}
 }

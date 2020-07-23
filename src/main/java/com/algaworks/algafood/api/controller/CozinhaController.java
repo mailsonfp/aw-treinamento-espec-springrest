@@ -1,14 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,25 +42,26 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	@Autowired
 	CozinhaModelInputAssembler cozinhaModelIn;
 	
+	@Autowired
+	PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
+	
 	//@GetMapping(produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) define qual o tipo de mídia retorna  método
 	@GetMapping	
-	public List<CozinhaModelOutput> listar(){
+	public CollectionModel<CozinhaModelOutput>  listar(){
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listar());
 	}
 		
 	@GetMapping("paginacao")	
-	public Page<CozinhaModelOutput> listarComPaginacao(@PageableDefault(size=2) Pageable pageable){
+	public PagedModel<CozinhaModelOutput> listarComPaginacao(@PageableDefault(size=2) Pageable pageable){
 		Page<Cozinha> cozinhasPage = cadastroCozinhaService.listarComPaginacao(pageable);
 		
-		List<CozinhaModelOutput> cozinhasModel = cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listarComPaginacao(pageable).getContent());
+		PagedModel<CozinhaModelOutput> cozinhasPagedModel = pagedResourcesAssembler.toModel(cozinhasPage, cozinhaModelOut);
 		
-		Page<CozinhaModelOutput> cozinhaModelPage = new PageImpl<>(cozinhasModel, pageable, cozinhasPage.getTotalElements());
-		
-		return cozinhaModelPage;
+		return cozinhasPagedModel;
 	}
 	
 	@GetMapping("/por-nome")
-	public List<CozinhaModelOutput> listarPorNome(@RequestParam String nome){
+	public CollectionModel<CozinhaModelOutput> listarPorNome(@RequestParam String nome){
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listarPorNome(nome));
 	}	 	
 	

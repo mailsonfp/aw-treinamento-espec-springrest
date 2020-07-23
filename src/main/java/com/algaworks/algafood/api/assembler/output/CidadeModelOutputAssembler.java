@@ -8,8 +8,8 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.api.controller.CidadeController;
-import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.model.output.CidadeModelOutput;
+import com.algaworks.algafood.api.util.AlgaLinks;
 import com.algaworks.algafood.domain.model.Cidade;
 
 @Component
@@ -18,6 +18,9 @@ public class CidadeModelOutputAssembler extends  RepresentationModelAssemblerSup
 	@Autowired
     private ModelMapper modelMapper;
     	
+	@Autowired
+	private AlgaLinks algaLinks;
+	
 	public CidadeModelOutputAssembler() {
 		super(CidadeController.class, CidadeModelOutput.class);
 	}
@@ -32,14 +35,9 @@ public class CidadeModelOutputAssembler extends  RepresentationModelAssemblerSup
 		
         CidadeModelOutput cidadeModel =  modelMapper.map(cidade, CidadeModelOutput.class);
         
-        cidadeModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
-				.buscar(cidadeModel.getId())).withSelfRel());
-
-		cidadeModel.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
-				.listar()).withRel("cidades"));
-		
-		cidadeModel.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class)
-				.buscar(cidadeModel.getEstado().getId())).withSelfRel());
+        cidadeModel.add(algaLinks.linkToCidades("cidades"));
+        
+        cidadeModel.getEstado().add(algaLinks.linkToEstado(cidadeModel.getEstado().getId()));
         
         return cidadeModel;
     }

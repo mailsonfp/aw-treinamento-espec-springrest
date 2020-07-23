@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.output.UsuarioModelOutputAssembler;
 import com.algaworks.algafood.api.model.output.UsuarioModelOutput;
+import com.algaworks.algafood.api.util.AlgaLinks;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
@@ -26,11 +27,16 @@ public class RestauranteUsuarioResponsavelController {
     @Autowired
     private UsuarioModelOutputAssembler usuarioModelOut;
     
+    @Autowired
+    private AlgaLinks algaLinks;
+    
     @GetMapping
     public CollectionModel<UsuarioModelOutput> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarThrow(restauranteId);
         
-        return usuarioModelOut.toCollectionModel(restaurante.getResponsaveis());
+        return usuarioModelOut.toCollectionModel(restaurante.getResponsaveis())
+        		.removeLinks()
+        		.add(algaLinks.linkToResponsaveisRestaurante(restauranteId));
     }
     
     @DeleteMapping("/{usuarioId}")

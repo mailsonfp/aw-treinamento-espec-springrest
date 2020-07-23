@@ -1,8 +1,8 @@
 package com.algaworks.algafood.api.openapi.controller;
 
 import org.springframework.beans.factory.parsing.Problem;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 import com.algaworks.algafood.api.model.input.PedidoModelInput;
 import com.algaworks.algafood.api.model.output.PedidoModelOutput;
@@ -25,7 +25,7 @@ public interface PedidoControllerOpenApi {
                 name = "campos", paramType = "query", type = "string")
     })
     @ApiOperation("Pesquisa os pedidos")
-    public Page<PedidoResumoModelOutput> listarUsandoFiltros(PedidoModelFilter filtro, Pageable pageable);
+    public PagedModel<PedidoResumoModelOutput> listarUsandoFiltros(PedidoModelFilter filtro, Pageable pageable);
     
     @ApiOperation("Registra um pedido")
     @ApiResponses({
