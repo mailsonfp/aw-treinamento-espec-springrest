@@ -1,8 +1,12 @@
 package com.algaworks.algafood.api.model.output;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import io.swagger.annotations.ApiModelProperty;
 
-public class EstadoModelOutput {
+@Relation(collectionRelation = "estados")
+public class EstadoModelOutput extends RepresentationModel<EstadoModelOutput> {
 	
 	@ApiModelProperty(example = "1")
 	private Long id;

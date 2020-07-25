@@ -3,10 +3,14 @@ package com.algaworks.algafood.api.model.output;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import io.swagger.annotations.ApiModelProperty;
 
 //@JsonFilter("pedidoFilter")
-public class PedidoResumoModelOutput {
+@Relation(collectionRelation = "pedidos")
+public class PedidoResumoModelOutput extends RepresentationModel<PedidoResumoModelOutput> {
 	
 	@ApiModelProperty(example = "Nome do Bairro", required = true)
 	private String codigo;

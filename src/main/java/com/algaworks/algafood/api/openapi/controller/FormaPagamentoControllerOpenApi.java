@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.algaworks.algafood.api.ExceptionHandler.Problema;
 import com.algaworks.algafood.api.model.input.FormaPagamentoModelInput;
 import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
+import com.algaworks.algafood.api.openapi.model.FormasPagamentoModelOpenApi;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +18,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Formas de Pagamento")
 public interface FormaPagamentoControllerOpenApi {
 	
-	@ApiOperation("Lista todas as formas de pagamento")
+	@ApiOperation(value = "Lista todas as formas de pagamento", response = FormasPagamentoModelOpenApi.class)
     public List<FormaPagamentoModelOutput> listar();
 	
 	@ApiOperation("Lista todas as formas de pagamento utilizando cache")

@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,19 +20,25 @@ public class PedidoManutencaoController {
 	
 	@PutMapping("/confirmacao")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void confirmarPedido(@PathVariable String pedidoCodigo) {
+	public ResponseEntity<Void> confirmarPedido(@PathVariable String pedidoCodigo) {
 		manutencaoPedidoService.confirmarPedido(pedidoCodigo);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/entrega")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void entregarPedido(@PathVariable String pedidoCodigo) {
+	public ResponseEntity<Void> entregarPedido(@PathVariable String pedidoCodigo) {
 		manutencaoPedidoService.entregarPedido(pedidoCodigo);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/cancelamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void cancelarPedido(@PathVariable String pedidoCodigo) {
+	public ResponseEntity<Void> cancelarPedido(@PathVariable String pedidoCodigo) {
 		manutencaoPedidoService.cancelarPedido(pedidoCodigo);
+		
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.openapi.controller.PedidoRelatorioControllerOpenApi;
+import com.algaworks.algafood.api.util.AlgaLinks;
 import com.algaworks.algafood.domain.filter.VendaDiariaModelFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.PedidoService;
@@ -26,6 +28,23 @@ public class PedidoRelatorioController implements PedidoRelatorioControllerOpenA
 	
 	@Autowired
 	private VendaReportService vendaReportService;
+	
+	@Autowired
+	private AlgaLinks algaLinks;
+	
+	public static class RelatoriosModel extends RepresentationModel<RelatoriosModel> {
+	}
+	
+
+	@Override
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public RelatoriosModel relatorios() {
+	    var relatoriosModel = new RelatoriosModel();
+	    
+	    relatoriosModel.add(algaLinks.linkToRelatorioConsultarVendasDiarias("vendas-diarias"));
+	    
+	    return relatoriosModel;
+	}  
 	
 	@GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaModelFilter filtro, @RequestParam(required = false, defaultValue = "+00:00") String timeOffset){

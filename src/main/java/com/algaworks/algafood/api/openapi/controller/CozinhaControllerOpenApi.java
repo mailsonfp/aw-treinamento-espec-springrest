@@ -1,9 +1,8 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 
 import com.algaworks.algafood.api.ExceptionHandler.Problema;
 import com.algaworks.algafood.api.model.input.CozinhaModelInput;
@@ -19,16 +18,16 @@ import io.swagger.annotations.ApiResponses;
 public interface CozinhaControllerOpenApi {
 	
 	@ApiOperation("Lista todas as cozinhas")
-	public List<CozinhaModelOutput> listar();
+	public CollectionModel<CozinhaModelOutput> listar();
 			
 	@ApiOperation("Lista todas as cozinhas utilizando paginação")
-	public Page<CozinhaModelOutput> listarComPaginacao(Pageable pageable);
+	public PagedModel<CozinhaModelOutput> listarComPaginacao(Pageable pageable);
 	
 	@ApiOperation("Busca as cozinhas por nome")
 	@ApiResponses({
         @ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problema.class)
     })
-	public List<CozinhaModelOutput> listarPorNome(@ApiParam(value = "Nome para buscar cozinhas", example = "Brasileira", required = true) String nome);	 	
+	public CollectionModel<CozinhaModelOutput> listarPorNome(@ApiParam(value = "Nome para buscar cozinhas", example = "Brasileira", required = true) String nome);	 	
 	
 	@ApiOperation("Busca um cozinha por id")
 	@ApiResponses({

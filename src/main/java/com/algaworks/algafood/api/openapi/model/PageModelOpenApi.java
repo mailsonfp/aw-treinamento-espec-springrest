@@ -1,13 +1,9 @@
 package com.algaworks.algafood.api.openapi.model;
 
-import java.util.List;
-
 import io.swagger.annotations.ApiModelProperty;
 
-public class PageModelOpenApi<T> {
-	
-	private List<T> content;
-	
+public class PageModelOpenApi {
+
 	@ApiModelProperty(example = "10", value = "Quantidade de registros por página")
 	private Long size;
 	
@@ -19,13 +15,7 @@ public class PageModelOpenApi<T> {
 	
 	@ApiModelProperty(example = "0", value = "Número da página(começa em zero)")
 	private Long number;
-	
-	public List<T> getContent() {
-		return content;
-	}
-	public void setContent(List<T> content) {
-		this.content = content;
-	}
+
 	public Long getSize() {
 		return size;
 	}
