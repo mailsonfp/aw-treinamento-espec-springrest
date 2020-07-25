@@ -38,9 +38,6 @@ import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.domain.service.PedidoService;
 import com.google.common.collect.ImmutableMap;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-
 @RestController
 @RequestMapping(value = "/pedidos")
 public class PedidoController implements PedidoControllerOpenApi {
@@ -91,7 +88,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoResumoModelOut.toCollectionModel(todosPedidos);
     }
     
-    @GetMapping("/pesquisa")
+    @GetMapping("pesquisa")
     public PagedModel<PedidoResumoModelOutput> listarUsandoFiltros(PedidoModelFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
         Pageable pageableTraduzido = traduzirPageable(pageable);
         
@@ -100,10 +97,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelOut);
     }
-    
-    @ApiImplicitParams({
-    	@ApiImplicitParam(value = "propriedades que devem ser retornadas na resposta(ex: nome,telefone)", name = "campos", paramType = "query", type = "string")
-    })
+
     @GetMapping("/{pedidoCodigo}")
     public PedidoModelOutput buscar(@PathVariable String pedidoCodigo) {
         Pedido pedido = emissaoPedido.buscarThrow(pedidoCodigo);

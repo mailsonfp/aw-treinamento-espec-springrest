@@ -8,19 +8,36 @@ import javax.servlet.ServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Links;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.model.output.CidadeModelOutput;
 import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
-import com.algaworks.algafood.api.model.output.PedidoResumoModelOutput;
+import com.algaworks.algafood.api.model.output.EstadoModelOutput;
+import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
+import com.algaworks.algafood.api.model.output.GrupoModelOutput;
+import com.algaworks.algafood.api.model.output.PermissaoModelOutput;
+import com.algaworks.algafood.api.model.output.ProdutoModelOutput;
+import com.algaworks.algafood.api.model.output.RestauranteBasicoModel;
+import com.algaworks.algafood.api.model.output.UsuarioModelOutput;
+import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.CozinhasPageModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.EstadosModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.FormasPagamentoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.GruposModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.PedidosPageResumoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.PermissoesModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.ProdutosModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.RestaurantesBasicoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.UsuariosModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -69,14 +86,23 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.additionalModels(typeResolver.resolve(Problema.class))
 				.ignoredParameterTypes(ServletRequest.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaModelOutput.class), CozinhasPageModelOpenApi.class))
-				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, PedidoResumoModelOutput.class), PedidosPageResumoModelOpenApi.class))
+				.directModelSubstitute(Links.class, LinksModelOpenApi.class)			
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(PagedModel.class, CozinhaModelOutput.class), CozinhasPageModelOpenApi.class))				
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, CidadeModelOutput.class), CidadesModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, EstadoModelOutput.class),EstadosModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, FormaPagamentoModelOutput.class),FormasPagamentoModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, GrupoModelOutput.class),GruposModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, PermissaoModelOutput.class),PermissoesModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, ProdutoModelOutput.class),ProdutosModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, RestauranteBasicoModel.class),RestaurantesBasicoModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, UsuarioModelOutput.class),UsuariosModelOpenApi.class))
 				.apiInfo(getApiInfo())
 				.tags(
 					new Tag("Cidades", "Responsável por armazenar todos os endpoints pertencentes a cidades"),
 					new Tag("Grupos", "Responsável por armazenar todos os endpoints pertencentes a Grupos de Usuário"),
 					new Tag("Cozinhas", "Responsável por armazenar todos os endpoints pertencentes a Cozinhas"),
-			        new Tag("Formas de pagamento", "Responsável por armazenar todos os endpoints pertencentes a Formas de Pagmento"),
+					new Tag("Pedidos", "Responsável por armazenar todos os endpoints pertencentes a Pedidos"),
+			        new Tag("Formas de Pagamento", "Responsável por armazenar todos os endpoints pertencentes a Formas de Pagmento"),
 			        new Tag("Restaurantes", "Responsável por armazenar todos os enpoints pertencentes a restaurantes"),
 			        new Tag("Produtos", "Responsável por armazenar todos os enpoints pertencentes a restaurantes"),
 			        new Tag("Relatórios", "Responsável por armazenar todos os endpoints que retornam relatórios"));

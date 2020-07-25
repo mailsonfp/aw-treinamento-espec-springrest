@@ -30,7 +30,7 @@ public class PedidoModelOutputAssembler extends RepresentationModelAssemblerSupp
         PedidoModelOutput pedidoModel = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoModel);
         
-        pedidoModel.add(linksConstructor.linkToPedidos());
+        pedidoModel.add(linksConstructor.linkToPedidos("pedidos"));
         
         if(pedido.getStatus()==StatusPedido.CRIADO) {
         	pedidoModel.add(linksConstructor.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));

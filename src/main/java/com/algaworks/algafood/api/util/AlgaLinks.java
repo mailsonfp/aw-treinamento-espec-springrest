@@ -18,12 +18,15 @@ import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.PedidoManutencaoController;
+import com.algaworks.algafood.api.controller.PedidoRelatorioController;
 import com.algaworks.algafood.api.controller.RestauranteController;
+import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
 import com.algaworks.algafood.api.controller.RestauranteProdutoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 
+@SuppressWarnings("deprecation")
 @Component
 public class AlgaLinks {
 	
@@ -31,7 +34,26 @@ public class AlgaLinks {
 			new TemplateVariable("page", VariableType.REQUEST_PARAM),
 			new TemplateVariable("size", VariableType.REQUEST_PARAM),
 			new TemplateVariable("sort", VariableType.REQUEST_PARAM)
-		);    
+		);
+	
+	public Link linkToRelatorios(String rel) {
+	    return linkTo(PedidoRelatorioController.class).withRel(rel);
+	}
+
+	public Link linkToRelatorioConsultarVendasDiarias(String rel) {
+	    TemplateVariables filtroVariables = new TemplateVariables(
+	            new TemplateVariable("restauranteId", VariableType.REQUEST_PARAM),
+	            new TemplateVariable("dataCriacaoInicio", VariableType.REQUEST_PARAM),
+	            new TemplateVariable("dataCriacaoFim", VariableType.REQUEST_PARAM),
+	            new TemplateVariable("timeOffset", VariableType.REQUEST_PARAM));
+	    
+	    String pedidosUrl = linkTo(methodOn(PedidoRelatorioController.class).consultarVendasDiarias(null, null)).toUri().toString();
+	    
+	    return new Link(UriTemplate.of(pedidosUrl, filtroVariables), rel);
+	}
+	
+	public static final TemplateVariables PROJECAO_VARIABLES = new TemplateVariables(
+			new TemplateVariable("projecao", VariableType.REQUEST_PARAM));
 	
 	public Link linkToConfirmacaoPedido(String codigoPedido, String rel) {
 		return linkTo(methodOn(PedidoManutencaoController.class).confirmarPedido(codigoPedido)).withRel(rel);
@@ -44,9 +66,8 @@ public class AlgaLinks {
 	public Link linkToCancelamentoPedido(String codigoPedido, String rel) {
 		return linkTo(methodOn(PedidoManutencaoController.class).cancelarPedido(codigoPedido)).withRel(rel);
 	}
-	
-	@SuppressWarnings("deprecation")
-	public Link linkToPedidos() {
+		
+	public Link linkToPedidos(String rel) {
 		TemplateVariables filtroVariables = new TemplateVariables(
 	    		new TemplateVariable("clienteId", VariableType.REQUEST_PARAM),
 	    		new TemplateVariable("restauranteId", VariableType.REQUEST_PARAM),
@@ -55,7 +76,7 @@ public class AlgaLinks {
 		
 	    String pedidosUrl = WebMvcLinkBuilder.linkTo(PedidoController.class).toUri().toString();
 	    
-	    return new Link(UriTemplate.of(pedidosUrl,PAGINACAOVARIABLES.concat(filtroVariables)), "pedidos");
+	    return new Link(UriTemplate.of(pedidosUrl,PAGINACAOVARIABLES.concat(filtroVariables)), rel);
 	}
 	
 	public Link linkToRestaurante(Long restauranteId, String rel) {
@@ -161,5 +182,54 @@ public class AlgaLinks {
 
 	public Link linkToCozinhas() {
 	    return linkToCozinhas(IanaLinkRelations.SELF.value());
+	}
+	
+	public Link linkToRestaurantes(String rel) {
+		String restaurantesUrl = linkTo(RestauranteController.class).toUri().toString();
+	    
+	    return new Link(UriTemplate.of(restaurantesUrl, PROJECAO_VARIABLES), rel);
+	}
+
+	public Link linkToRestaurantes() {
+	    return linkToRestaurantes(IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
+	    return linkTo(methodOn(RestauranteFormaPagamentoController.class)
+	            .listar(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToCozinha(Long cozinhaId, String rel) {
+	    return linkTo(methodOn(CozinhaController.class)
+	            .buscar(cozinhaId)).withRel(rel);
+	}
+
+	public Link linkToCozinha(Long cozinhaId) {
+	    return linkToCozinha(cozinhaId, IanaLinkRelations.SELF.value());
+	}
+	
+	public Link linkToRestauranteResponsaveis(Long restauranteId, String rel) {
+		return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+				.listar(restauranteId)).withRel(rel);
+	}
+	
+	public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
+	    return linkTo(methodOn(RestauranteController.class)
+	            .abreRestaurante(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToRestauranteFechamento(Long restauranteId, String rel) {
+	    return linkTo(methodOn(RestauranteController.class)
+	            .fechaRestaurante(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToRestauranteInativacao(Long restauranteId, String rel) {
+	    return linkTo(methodOn(RestauranteController.class)
+	            .inativar(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
+	    return linkTo(methodOn(RestauranteController.class)
+	            .ativar(restauranteId)).withRel(rel);
 	}
 }

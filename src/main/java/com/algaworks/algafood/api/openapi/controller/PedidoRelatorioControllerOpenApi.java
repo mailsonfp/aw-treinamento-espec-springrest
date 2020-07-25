@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.algaworks.algafood.api.controller.PedidoRelatorioController.RelatoriosModel;
 import com.algaworks.algafood.domain.filter.VendaDiariaModelFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 
@@ -15,6 +16,9 @@ import io.swagger.annotations.ApiParam;
 
 @Api(tags = "Relatórios")
 public interface PedidoRelatorioControllerOpenApi {
+	
+	@ApiOperation(value = "Relatórios", hidden = true)
+	RelatoriosModel relatorios();
 	
 	@ApiOperation("Consulta estatísticas de vendas diárias")
     @ApiImplicitParams({
