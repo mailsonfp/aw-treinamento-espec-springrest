@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -35,6 +37,8 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
 	
 	private static final String MSG_ERRO_GENERICO = "Ocorreu um erro interno inesperado e não foi posível completar a requisição.";
 	
@@ -105,7 +109,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	    // fazendo logging) para mostrar a stacktrace no console
 	    // Se não fizer isso, você não vai ver a stacktrace de exceptions que seriam importantes
 	    // para você durante, especialmente na fase de desenvolvimento
-	    ex.printStackTrace();
+	    logger.error(ex.getMessage(), ex);
 	    	    
 	    return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
