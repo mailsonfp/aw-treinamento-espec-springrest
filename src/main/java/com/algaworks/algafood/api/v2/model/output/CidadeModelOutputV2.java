@@ -5,7 +5,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@Relation(collectionRelation = "cidades")
+@Relation(collectionRelation = "CidadesModelOutput")
 //@ApiModel(value="Cidade", description = "Representa o retorno de uma cidade")
 public class CidadeModelOutputV2 extends RepresentationModel<CidadeModelOutputV2> {
 	

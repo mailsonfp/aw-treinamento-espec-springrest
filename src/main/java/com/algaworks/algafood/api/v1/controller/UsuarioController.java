@@ -27,7 +27,7 @@ import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/v1/usuarios")
 public class UsuarioController {
 	@Autowired
     private UsuarioRepository usuarioRepository;

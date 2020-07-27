@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,15 +20,15 @@ import com.algaworks.algafood.api.v2.assembler.input.CidadeModelInputAssemblerV2
 import com.algaworks.algafood.api.v2.assembler.output.CidadeModelOutputAssemblerV2;
 import com.algaworks.algafood.api.v2.model.input.CidadeModelInputV2;
 import com.algaworks.algafood.api.v2.model.output.CidadeModelOutputV2;
-import com.algaworks.algafood.core.web.AlgaMediaTypes;
+import com.algaworks.algafood.api.v2.openapi.controller.CidadeControllerV2OpenApi;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
 @RestController
-@RequestMapping(path = "/cidades", produces = AlgaMediaTypes.V2_APPLICATION_JSON_VALUE )
-public class CidadeControllerV2 {
+@RequestMapping(path = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE )
+public class CidadeControllerV2 implements CidadeControllerV2OpenApi{
 	
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;

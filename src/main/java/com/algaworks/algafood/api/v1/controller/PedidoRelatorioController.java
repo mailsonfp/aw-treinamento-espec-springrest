@@ -20,7 +20,7 @@ import com.algaworks.algafood.domain.service.PedidoService;
 import com.algaworks.algafood.domain.service.VendaReportService;
 
 @RestController
-@RequestMapping(path = "/pedidos/relatorios")
+@RequestMapping(path = "/v1/pedidos/relatorios")
 public class PedidoRelatorioController implements PedidoRelatorioControllerOpenApi {
 
 	@Autowired

@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@CrossOrigin(origins = "http://127.0.0.1:8000", maxAge = 10)// --- sem a definição de orgins, aceita requisição de qualquer origem
 @RestController
-@RequestMapping(path = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteController implements RestauranteControllerOpenApi {
 	
 	@Autowired

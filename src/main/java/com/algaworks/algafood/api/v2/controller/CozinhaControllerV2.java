@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.v1.controller;
+package com.algaworks.algafood.api.v2.controller;
 
 import javax.validation.Valid;
 
@@ -21,78 +21,70 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.v1.assembler.input.CozinhaModelInputAssembler;
-import com.algaworks.algafood.api.v1.assembler.output.CozinhaModelOutputAssembler;
-import com.algaworks.algafood.api.v1.model.input.CozinhaModelInput;
-import com.algaworks.algafood.api.v1.model.output.CozinhaModelOutput;
-import com.algaworks.algafood.api.v1.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.api.v2.assembler.input.CozinhaModelInputAssemblerV2;
+import com.algaworks.algafood.api.v2.assembler.output.CozinhaModelOutputAssemblerV2;
+import com.algaworks.algafood.api.v2.model.input.CozinhaModelInputV2;
+import com.algaworks.algafood.api.v2.model.output.CozinhaModelOutputV2;
+import com.algaworks.algafood.api.v2.openapi.controller.CozinhaControllerV2OpenApi;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
 //@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) para definir que todos os métodos da classe retornam Json
 @RestController
-@RequestMapping("/v1/cozinhas")
-public class CozinhaController implements CozinhaControllerOpenApi {	
+@RequestMapping("/v2/cozinhas")
+public class CozinhaControllerV2 implements CozinhaControllerV2OpenApi{	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
 	@Autowired
-	CozinhaModelOutputAssembler cozinhaModelOut;
+	CozinhaModelOutputAssemblerV2 cozinhaModelOut;
 	
 	@Autowired
-	CozinhaModelInputAssembler cozinhaModelIn;
+	CozinhaModelInputAssemblerV2 cozinhaModelIn;
 	
 	@Autowired
 	PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 	
 	//@GetMapping(produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) define qual o tipo de mídia retorna  método
 	@GetMapping	
-	public CollectionModel<CozinhaModelOutput>  listar(){
+	public CollectionModel<CozinhaModelOutputV2>  listar(){
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listar());
 	}
 		
 	@GetMapping("paginacao")	
-	public PagedModel<CozinhaModelOutput> listarComPaginacao(@PageableDefault(size=2) Pageable pageable){
+	public PagedModel<CozinhaModelOutputV2> listarComPaginacao(@PageableDefault(size=2) Pageable pageable){
 		Page<Cozinha> cozinhasPage = cadastroCozinhaService.listarComPaginacao(pageable);
 		
-		PagedModel<CozinhaModelOutput> cozinhasPagedModel = pagedResourcesAssembler.toModel(cozinhasPage, cozinhaModelOut);
+		PagedModel<CozinhaModelOutputV2> cozinhasPagedModel = pagedResourcesAssembler.toModel(cozinhasPage, cozinhaModelOut);
 		
 		return cozinhasPagedModel;
 	}
 	
 	@GetMapping("/por-nome")
-	public CollectionModel<CozinhaModelOutput> listarPorNome(@RequestParam String nome){
+	public CollectionModel<CozinhaModelOutputV2> listarPorNome(@RequestParam String nome){
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listarPorNome(nome));
 	}	 	
 	
 	@GetMapping("/{cozinhaId}")
-	public CozinhaModelOutput buscar(@PathVariable Long cozinhaId) {
+	public CozinhaModelOutputV2 buscar(@PathVariable Long cozinhaId) {
 		return cozinhaModelOut.toModel(cadastroCozinhaService.buscarThrow(cozinhaId));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CozinhaModelOutput adicionar(@RequestBody @Valid CozinhaModelInput cozinhaInput) {
+	public CozinhaModelOutputV2 adicionar(@RequestBody @Valid CozinhaModelInputV2 cozinhaInput) {
 		Cozinha cozinha = cozinhaModelIn.toDomainObject(cozinhaInput);
 		return cozinhaModelOut.toModel(cadastroCozinhaService.salvar(cozinha));		
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public CozinhaModelOutput atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaModelInput cozinhaInput){
+	public CozinhaModelOutputV2 atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaModelInputV2 cozinhaInput){
 		Cozinha cozinhaAtual = cadastroCozinhaService.buscarThrow(cozinhaId);
 		
 		cozinhaModelIn.copyToDomainObject(cozinhaInput, cozinhaAtual);
 		
 		return cozinhaModelOut.toModel(cadastroCozinhaService.salvar(cozinhaAtual));		
 	}
-	
-	/*
-	 * @DeleteMapping("/{cozinhaId}") public ResponseEntity<?> remover(@PathVariable
-	 * Long cozinhaId){ try { cadastroCozinhaService.remover(cozinhaId); return
-	 * ResponseEntity.noContent().build(); }catch(EntidadeNaoEncontradaException e)
-	 * { return ResponseEntity.notFound().build(); }catch(EntidadeEmUsoException e)
-	 * { return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); } }
-	 */
 	
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
