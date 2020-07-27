@@ -14,27 +14,27 @@ public class PedidosPageResumoModelOpenApi {
 	private Links _links;
 	private PageModelOpenApi page;
 	
-	PedidosResumoEmbeddedModelOpenApi get_embedded() {
+	public PedidosResumoEmbeddedModelOpenApi get_embedded() {
 		return _embedded;
 	}
 
-	void set_embedded(PedidosResumoEmbeddedModelOpenApi _embedded) {
+	public void set_embedded(PedidosResumoEmbeddedModelOpenApi _embedded) {
 		this._embedded = _embedded;
 	}
 
-	Links get_links() {
+	public Links get_links() {
 		return _links;
 	}
 
-	void set_links(Links _links) {
+	public void set_links(Links _links) {
 		this._links = _links;
 	}
 
-	PageModelOpenApi getPage() {
+	public PageModelOpenApi getPage() {
 		return page;
 	}
 
-	void setPage(PageModelOpenApi page) {
+	public void setPage(PageModelOpenApi page) {
 		this.page = page;
 	}
 
@@ -42,11 +42,11 @@ public class PedidosPageResumoModelOpenApi {
 	public class PedidosResumoEmbeddedModelOpenApi {
 		private List<PedidoResumoModelOutput> pedidos;
 
-		List<PedidoResumoModelOutput> getPedidos() {
+		public List<PedidoResumoModelOutput> getPedidos() {
 			return pedidos;
 		}
 
-		void setPedidos(List<PedidoResumoModelOutput> pedidos) {
+		public void setPedidos(List<PedidoResumoModelOutput> pedidos) {
 			this.pedidos = pedidos;
 		}
 	}
