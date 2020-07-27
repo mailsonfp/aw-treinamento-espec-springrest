@@ -23,6 +23,7 @@ import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
 import com.algaworks.algafood.api.model.output.EstadoModelOutput;
 import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
 import com.algaworks.algafood.api.model.output.GrupoModelOutput;
+import com.algaworks.algafood.api.model.output.PedidoResumoModelOutput;
 import com.algaworks.algafood.api.model.output.PermissaoModelOutput;
 import com.algaworks.algafood.api.model.output.ProdutoModelOutput;
 import com.algaworks.algafood.api.model.output.RestauranteBasicoModel;
@@ -34,6 +35,7 @@ import com.algaworks.algafood.api.openapi.model.FormasPagamentoModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.GruposModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.PedidosPageResumoModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PermissoesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.ProdutosModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.RestaurantesBasicoModelOpenApi;
@@ -87,7 +89,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.ignoredParameterTypes(ServletRequest.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 				.directModelSubstitute(Links.class, LinksModelOpenApi.class)			
-				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(PagedModel.class, CozinhaModelOutput.class), CozinhasPageModelOpenApi.class))				
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(PagedModel.class, CozinhaModelOutput.class), CozinhasPageModelOpenApi.class))
+				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(PagedModel.class, PedidoResumoModelOutput.class), PedidosPageResumoModelOpenApi.class))
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, CidadeModelOutput.class), CidadesModelOpenApi.class))
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, EstadoModelOutput.class),EstadosModelOpenApi.class))
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, FormaPagamentoModelOutput.class),FormasPagamentoModelOpenApi.class))
