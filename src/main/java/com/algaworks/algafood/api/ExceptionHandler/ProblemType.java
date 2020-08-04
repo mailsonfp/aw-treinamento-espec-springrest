@@ -7,7 +7,8 @@ public enum ProblemType {
 	ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negócio"),
 	JSON_INVALIDO("/json-invalido","Json inválido"),
 	PARAMETRO_INVALIDO("/parametro-inválido","Parâmetro inválido"),
-	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro interno");
+	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro interno"),
+	ACESSO_NEGADO("/acesso-negado", "Acesso negado");
 	
 	private String title;
 	private String uri;
