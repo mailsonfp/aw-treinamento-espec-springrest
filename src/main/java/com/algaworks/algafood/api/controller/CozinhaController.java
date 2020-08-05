@@ -12,6 +12,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import com.algaworks.algafood.api.assembler.output.CozinhaModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.CozinhaModelInput;
 import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
 import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityCozinhas;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
@@ -50,13 +52,15 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	@Autowired
 	PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 	
-	//@GetMapping(produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE) define qual o tipo de mídia retorna  método
+	@CheckSecurityCozinhas.PermiteConsultar
 	@GetMapping	
 	public CollectionModel<CozinhaModelOutput>  listar(){
 		logger.info("Listando cozinhas sem paginação");
+		logger.info(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listar());
 	}
-		
+	
+	@CheckSecurityCozinhas.PermiteConsultar
 	@GetMapping("paginacao")	
 	public PagedModel<CozinhaModelOutput> listarComPaginacao(@PageableDefault(size=2) Pageable pageable){
 		logger.info("Listando cozinhas com paginação");
@@ -67,16 +71,19 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		return cozinhasPagedModel;
 	}
 	
+	@CheckSecurityCozinhas.PermiteConsultar
 	@GetMapping("/por-nome")
 	public CollectionModel<CozinhaModelOutput> listarPorNome(@RequestParam String nome){
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listarPorNome(nome));
 	}	 	
 	
+	@CheckSecurityCozinhas.PermiteConsultar
 	@GetMapping("/{cozinhaId}")
 	public CozinhaModelOutput buscar(@PathVariable Long cozinhaId) {
 		return cozinhaModelOut.toModel(cadastroCozinhaService.buscarThrow(cozinhaId));
 	}
 	
+	@CheckSecurityCozinhas.PermiteEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaModelOutput adicionar(@RequestBody @Valid CozinhaModelInput cozinhaInput) {
@@ -84,6 +91,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		return cozinhaModelOut.toModel(cadastroCozinhaService.salvar(cozinha));		
 	}
 	
+	@CheckSecurityCozinhas.PermiteEditar
 	@PutMapping("/{cozinhaId}")
 	public CozinhaModelOutput atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaModelInput cozinhaInput){
 		Cozinha cozinhaAtual = cadastroCozinhaService.buscarThrow(cozinhaId);
@@ -92,14 +100,6 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		
 		return cozinhaModelOut.toModel(cadastroCozinhaService.salvar(cozinhaAtual));		
 	}
-	
-	/*
-	 * @DeleteMapping("/{cozinhaId}") public ResponseEntity<?> remover(@PathVariable
-	 * Long cozinhaId){ try { cadastroCozinhaService.remover(cozinhaId); return
-	 * ResponseEntity.noContent().build(); }catch(EntidadeNaoEncontradaException e)
-	 * { return ResponseEntity.notFound().build(); }catch(EntidadeEmUsoException e)
-	 * { return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); } }
-	 */
 	
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

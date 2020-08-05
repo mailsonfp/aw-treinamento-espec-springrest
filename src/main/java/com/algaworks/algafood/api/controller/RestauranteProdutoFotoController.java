@@ -28,6 +28,7 @@ import com.algaworks.algafood.api.assembler.input.ProdutoFotoModelInput;
 import com.algaworks.algafood.api.assembler.output.ProdutoFotoModelOutputAssembler;
 import com.algaworks.algafood.api.model.output.ProdutoFotoModelOutput;
 import com.algaworks.algafood.api.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityRestaurante;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.ProdutoFoto;
@@ -57,6 +58,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return produtoFotoOut.toModel(cadastroProdutoFotoService.buscarThrow(restauranteId, produtoId));
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<?> buscarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader)
 			throws HttpMediaTypeNotAcceptableException {
@@ -84,6 +86,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		}
 	}	
 
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public ProdutoFotoModelOutput atualizarFoto(@PathVariable Long restauranteId, 
@@ -106,6 +109,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return produtoFotoOut.toModel(fotoSalva);
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removerFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {

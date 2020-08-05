@@ -87,9 +87,6 @@ public class Usuario {
 	public void setGrupos(Set<Grupo> grupos) {
 		this.grupos = grupos;
 	}
-	public boolean senhaCoincideCom(String senha) {
-	    return getSenha().equals(senha);
-	}
 	
 	public boolean adicionarGrupo(Grupo grupo) {
 	    return getGrupos().add(grupo);
@@ -99,9 +96,10 @@ public class Usuario {
 	    return getGrupos().remove(grupo);
 	}
 	
-	public boolean senhaNaoCoincideCom(String senha) {
-	    return !senhaCoincideCom(senha);
+	public boolean isNovo() {
+	    return getId() == null;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

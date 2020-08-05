@@ -24,6 +24,7 @@ import com.algaworks.algafood.api.assembler.output.FormaPagamentoModelOutputAsse
 import com.algaworks.algafood.api.model.input.FormaPagamentoModelInput;
 import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
 import com.algaworks.algafood.api.openapi.controller.FormaPagamentoControllerOpenApi;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityFormaPagamento;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
@@ -44,6 +45,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     @Autowired
     private FormaPagamentoModelInputAssembler formaPagamentoIn;
     
+    @CheckSecurityFormaPagamento.PermiteConsultar
     @GetMapping
     public List<FormaPagamentoModelOutput> listar() {
         List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
@@ -51,6 +53,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return formaPagamentoOut.toCollectionModel(todasFormasPagamentos);
     }
     
+    @CheckSecurityFormaPagamento.PermiteConsultar
     @GetMapping("/com-cache")
     public ResponseEntity<List<FormaPagamentoModelOutput>> listarComCash() {
     	
@@ -90,6 +93,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 				.body(formasPagamentosModel);
 	}*/
     
+    @CheckSecurityFormaPagamento.PermiteConsultar
     @GetMapping("/{formaPagamentoId}")
     public FormaPagamentoModelOutput buscar(@PathVariable Long formaPagamentoId) {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarThrow(formaPagamentoId);
@@ -97,6 +101,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return formaPagamentoOut.toModel(formaPagamento);
     }
     
+    @CheckSecurityFormaPagamento.PermiteConsultar
     @GetMapping("com-cache/{formaPagamentoId}")
     public ResponseEntity<FormaPagamentoModelOutput> buscarComCache(@PathVariable Long formaPagamentoId) {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarThrow(formaPagamentoId);
@@ -139,7 +144,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 	            .body(formaPagamentoModel);
 	}*/
     
-    
+    @CheckSecurityFormaPagamento.PermiteEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModelOutput adicionar(@RequestBody @Valid FormaPagamentoModelInput formaPagamentoInput) {
@@ -150,6 +155,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return formaPagamentoOut.toModel(formaPagamento);
     }
     
+    @CheckSecurityFormaPagamento.PermiteEditar
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoModelOutput atualizar(@PathVariable Long formaPagamentoId,
             @RequestBody @Valid FormaPagamentoModelInput formaPagamentoInput) {
@@ -162,6 +168,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return formaPagamentoOut.toModel(formaPagamentoAtual);
     }
     
+    @CheckSecurityFormaPagamento.PermiteEditar
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long formaPagamentoId) {

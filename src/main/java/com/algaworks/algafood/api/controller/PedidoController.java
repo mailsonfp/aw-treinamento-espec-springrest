@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.output.PedidoModelInputAssembler;
+import com.algaworks.algafood.api.assembler.input.PedidoModelInputAssembler;
 import com.algaworks.algafood.api.assembler.output.PedidoModelOutputAssembler;
 import com.algaworks.algafood.api.assembler.output.PedidoResumoModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.PedidoModelInput;
@@ -29,6 +29,8 @@ import com.algaworks.algafood.api.model.output.PedidoResumoModelOutput;
 import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
 import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
+import com.algaworks.algafood.core.security.AlgaSecurity;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityPedido;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.filter.PedidoModelFilter;
@@ -60,6 +62,9 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
     
+    @Autowired
+    private AlgaSecurity security;
+    
 	/*
 	 * @GetMapping public MappingJacksonValue listar(@RequestParam(required = false)
 	 * String campos) { List<Pedido> pedidos = pedidoRepository.findAll();
@@ -81,6 +86,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	 * return pedidosWrapper; }
 	 */
     
+    @CheckSecurityPedido.PermitePesquisar
     @GetMapping
     public CollectionModel<PedidoResumoModelOutput> listar() {
         List<Pedido> todosPedidos = pedidoService.listar();
@@ -88,6 +94,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoResumoModelOut.toCollectionModel(todosPedidos);
     }
     
+    @CheckSecurityPedido.PermitePesquisar
     @GetMapping("pesquisa")
     public PagedModel<PedidoResumoModelOutput> listarUsandoFiltros(PedidoModelFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
         Pageable pageableTraduzido = traduzirPageable(pageable);
@@ -98,6 +105,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelOut);
     }
 
+    @CheckSecurityPedido.PermiteBuscar
     @GetMapping("/{pedidoCodigo}")
     public PedidoModelOutput buscar(@PathVariable String pedidoCodigo) {
         Pedido pedido = emissaoPedido.buscarThrow(pedidoCodigo);
@@ -105,15 +113,15 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoModelOut.toModel(pedido);
     }    
     
+    @CheckSecurityPedido.PermiteCriar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoModelOutput adicionar(@Valid @RequestBody PedidoModelInput pedidoInput) {
         try {
             Pedido novoPedido = pedidoModelIn.toDomainObject(pedidoInput);
 
-            // TODO pegar usuário autenticado
             novoPedido.setCliente(new Usuario());
-            novoPedido.getCliente().setId(1L);
+            novoPedido.getCliente().setId(security.getUsuarioId());
 
             novoPedido = emissaoPedido.emitir(novoPedido);
 

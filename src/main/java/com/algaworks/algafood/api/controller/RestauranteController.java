@@ -38,6 +38,7 @@ import com.algaworks.algafood.api.model.output.RestauranteApenasNomeModel;
 import com.algaworks.algafood.api.model.output.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.output.RestauranteModelOutput;
 import com.algaworks.algafood.api.openapi.controller.RestauranteControllerOpenApi;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityRestaurante;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -72,46 +73,33 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	private RestauranteApenasNomeModelAssembler restauranteApenasNomeModelAssembler;
 	
 	
+	@CheckSecurityRestaurante.PermiteConsultar
 	@GetMapping
 	public CollectionModel<RestauranteModelOutput> listar(){
 		return restauranteModelOutAssembler.toCollectionModel(cadastroRestauranteService.listar());
 	}
 	
 	//@JsonView(RestauranteView.Resumo.class)
+	@CheckSecurityRestaurante.PermiteConsultar
 	@GetMapping(params = "projecao=resumo")
 	public CollectionModel<RestauranteBasicoModel> listarComResumo(){
 		return restauranteBasicoModelAssembler.toCollectionModel(cadastroRestauranteService.listar());
 	}
 	
 	//@JsonView(RestauranteView.ApenasNome.class)
+	@CheckSecurityRestaurante.PermiteConsultar
 	@GetMapping(params = "projecao=apenas-nome")
 	public CollectionModel<RestauranteApenasNomeModel> listarApenasNome(){
 		return restauranteApenasNomeModelAssembler.toCollectionModel(cadastroRestauranteService.listar());
 	}
 	
-//	@GetMapping
-//	public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
-//		List<Restaurante> restaurantes = restauranteRepository.findAll();
-//		List<RestauranteModel> restaurantesModel = restauranteModelAssembler.toCollectionModel(restaurantes);
-//		
-//		MappingJacksonValue restaurantesWrapper = new MappingJacksonValue(restaurantesModel);
-//		
-//		restaurantesWrapper.setSerializationView(RestauranteView.Resumo.class);
-//		
-//		if ("apenas-nome".equals(projecao)) {
-//			restaurantesWrapper.setSerializationView(RestauranteView.ApenasNome.class);
-//		} else if ("completo".equals(projecao)) {
-//			restaurantesWrapper.setSerializationView(null);
-//		}
-//		
-//		return restaurantesWrapper;
-//	}
-	
+	@CheckSecurityRestaurante.PermiteConsultar
 	@GetMapping("/{restauranteId}")
 	public RestauranteModelOutput buscar(@PathVariable Long restauranteId){
 		return restauranteModelOutAssembler.toModel(cadastroRestauranteService.buscarThrow(restauranteId));
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public RestauranteModelOutput adicionar(@RequestBody @Valid RestauranteModelInput restauranteInput){
@@ -123,6 +111,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		}		
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@PutMapping("/{restauranteId}")
 	@ResponseStatus(HttpStatus.CREATED)
     public RestauranteModelOutput atualizar(@PathVariable Long restauranteId,
@@ -138,6 +127,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		}					
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@PatchMapping("/{restauranteId}")
 	public RestauranteModelOutput atualizarPorCampos(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request){		
 		Restaurante restauranteAtual = cadastroRestauranteService.buscarThrow(restauranteId);
@@ -159,6 +149,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		}
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@PutMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
@@ -167,6 +158,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
@@ -175,11 +167,13 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@DeleteMapping("/{restauranteId}")
 	public void remover(@PathVariable Long restauranteId){
 		cadastroRestauranteService.remover(restauranteId);		
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@PutMapping("/{restauranteId}/abertura")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> abreRestaurante(@PathVariable Long restauranteId) {
@@ -188,6 +182,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@PutMapping("/{restauranteId}/fechamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> fechaRestaurante(@PathVariable Long restauranteId) {
@@ -196,6 +191,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@PutMapping("/ativacoes")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
@@ -206,6 +202,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		}		
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarCadastro
 	@DeleteMapping("/ativacoes")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void desativarMultiplos(@RequestBody List<Long> restauranteIds) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.openapi.controller.PedidoRelatorioControllerOpenApi;
 import com.algaworks.algafood.api.util.AlgaLinks;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityPedido;
 import com.algaworks.algafood.domain.filter.VendaDiariaModelFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.PedidoService;
@@ -46,11 +47,13 @@ public class PedidoRelatorioController implements PedidoRelatorioControllerOpenA
 	    return relatoriosModel;
 	}  
 	
+	@CheckSecurityPedido.PermiteGerarRelatorios
 	@GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaModelFilter filtro, @RequestParam(required = false, defaultValue = "+00:00") String timeOffset){
 		return pedidoService.consultarVendasDiarias(filtro, timeOffset);
 	}
 	
+	@CheckSecurityPedido.PermiteGerarRelatorios
 	@GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaModelFilter filtro, @RequestParam(required = false, defaultValue = "+00:00") String timeOffset){
 		byte[] bytesPdf = vendaReportService.emitirRelatorioVendasDiarias(filtro, timeOffset);
