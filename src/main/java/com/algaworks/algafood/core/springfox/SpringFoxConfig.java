@@ -44,15 +44,23 @@ import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.OAuthBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.GrantType;
+import springfox.documentation.service.ResourceOwnerPasswordCredentialsGrant;
 import springfox.documentation.service.ResponseMessage;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -99,6 +107,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, ProdutoModelOutput.class),ProdutosModelOpenApi.class))
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, RestauranteBasicoModel.class),RestaurantesBasicoModelOpenApi.class))
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, UsuarioModelOutput.class),UsuariosModelOpenApi.class))
+				.securitySchemes(Arrays.asList(getSecurityScheme()))
+				.securityContexts(Arrays.asList(getSecurityContext()))
 				.apiInfo(getApiInfo())
 				.tags(
 					new Tag("Cidades", "Responsável por armazenar todos os endpoints pertencentes a cidades"),
@@ -109,6 +119,35 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 			        new Tag("Restaurantes", "Responsável por armazenar todos os enpoints pertencentes a restaurantes"),
 			        new Tag("Produtos", "Responsável por armazenar todos os enpoints pertencentes a restaurantes"),
 			        new Tag("Relatórios", "Responsável por armazenar todos os endpoints que retornam relatórios"));
+	}
+	
+	private SecurityScheme getSecurityScheme() {
+		return new OAuthBuilder()
+					.name("Algafood")
+					.grantTypes(getGrantTypes())
+					.scopes(getScopes())
+				.build();
+	}
+	
+	private SecurityContext getSecurityContext() {
+		var securityReference = SecurityReference.builder()
+				.reference("AlgaFood")
+				.scopes(getScopes().toArray(new AuthorizationScope[0]))
+				.build();
+		
+		return SecurityContext.builder()
+				.securityReferences(Arrays.asList(securityReference))
+				.forPaths(PathSelectors.any())
+				.build();
+	}
+	
+	private List<GrantType> getGrantTypes(){
+		return Arrays.asList(new ResourceOwnerPasswordCredentialsGrant("http://localhost:8081/oauth/token"));
+	}
+	
+	private List<AuthorizationScope> getScopes(){
+		return Arrays.asList(new AuthorizationScope("Read", "Acesso de Leitura"),
+				new AuthorizationScope("Write", "Acesso de Escrita"));
 	}
 	
 	private List<ResponseMessage> getGlobalResponseMessage(){
