@@ -13,14 +13,14 @@ public @interface CheckSecurityPedido {
 	
 	@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
 	@PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or "
-			+ "@algaSecurity.getUsuarioId() == returnObject.cliente.id or "
+			+ "@algaSecurity.checaUsuarioLogado(returnObject.cliente.id) or "
 			+ "@algaSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
     @Retention(RUNTIME)
     @Target(METHOD)
     public @interface PermiteBuscar { }
 	
 	@PreAuthorize("hasAuthority('SCOPE_READ') and (hasAuthority('CONSULTAR_PEDIDOS') or " 
-			+ "@algaSecurity.getUsuarioId() == #filtro.clienteId or"
+			+ "@algaSecurity.checaUsuarioLogado(#filtro.clienteId) or"
 			+ "@algaSecurity.gerenciaRestaurante(#filtro.restauranteId))")
 	@Retention(RUNTIME)
 	@Target(METHOD)
@@ -31,8 +31,7 @@ public @interface CheckSecurityPedido {
 	@Target(METHOD)
 	public @interface PermiteCriar { }
 
-	@PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('GERENCIAR_PEDIDOS') or "
-			+ "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+	@PreAuthorize("@algaSecurity.permiteGerenciarPedido(#codigoPedido)")
 	@Retention(RUNTIME)
 	@Target(METHOD)
 	public @interface PermiteGerenciarPedidos {}

@@ -11,13 +11,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public @interface CheckSecurityUsuariosGruposPermissoes {
 	
 	@PreAuthorize("hasAuthority('SCOPE_WRITE') and "
-            + "@algaSecurity.getUsuarioId() == #usuarioId")
+            + "@algaSecurity.checaUsuarioLogado(#usuarioId)")
     @Retention(RUNTIME)
     @Target(METHOD)
     public @interface PermiteAlterarPropriaSenha { }
     
     @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES') or "
-            + "@algaSecurity.getUsuarioId() == #usuarioId)")
+            + "@algaSecurity.checaUsuarioLogado(#usuarioId))")
     @Retention(RUNTIME)
     @Target(METHOD)
     public @interface PermiteAlterarUsuario { }

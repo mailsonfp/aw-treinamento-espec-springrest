@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.output.PedidoModelInputAssembler;
+import com.algaworks.algafood.api.assembler.input.PedidoModelInputAssembler;
 import com.algaworks.algafood.api.assembler.output.PedidoModelOutputAssembler;
 import com.algaworks.algafood.api.assembler.output.PedidoResumoModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.PedidoModelInput;

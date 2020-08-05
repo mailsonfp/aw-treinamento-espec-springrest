@@ -39,4 +39,16 @@ public class AlgaSecurity {
 	public boolean gerenciaRestauranteDoPedido(String codigoPedido) {
 	    return pedidoRepository.isPedidoGerenciadoPor(codigoPedido, getUsuarioId());
 	}
+	
+	public boolean checaUsuarioLogado(Long usuarioId) {
+		return getUsuarioId() != null && usuarioId != null && getUsuarioId().equals(usuarioId);
+	}
+	
+	public boolean hasAuthority(String authorityName) {
+		return getAuthentication().getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(authorityName));
+	}
+	
+	public boolean permiteGerenciarPedido(String pedidoCodigo) {
+		return hasAuthority("SCOPE_WRITE") && (hasAuthority("GERENCIAR_PEDIDOS") || gerenciaRestauranteDoPedido(pedidoCodigo));
+	}
 }

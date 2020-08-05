@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.model.output.PedidoModelOutput;
 import com.algaworks.algafood.api.util.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.StatusPedido;
 
@@ -21,6 +22,9 @@ public class PedidoModelOutputAssembler extends RepresentationModelAssemblerSupp
 	@Autowired
 	private AlgaLinks linksConstructor;
 	
+	@Autowired
+	private AlgaSecurity algaSecurity;
+	
 	public PedidoModelOutputAssembler() {
         super(PedidoController.class, PedidoModelOutput.class);
     }
@@ -32,13 +36,15 @@ public class PedidoModelOutputAssembler extends RepresentationModelAssemblerSupp
         
         pedidoModel.add(linksConstructor.linkToPedidos("pedidos"));
         
-        if(pedido.getStatus()==StatusPedido.CRIADO) {
-        	pedidoModel.add(linksConstructor.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
-        	
-        	pedidoModel.add(linksConstructor.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
-        }else if (pedido.getStatus()==StatusPedido.CONFIRMADO){
-        	pedidoModel.add(linksConstructor.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
-        }            
+        if(algaSecurity.permiteGerenciarPedido(pedido.getCodigo())) {
+	        if(pedido.getStatus()==StatusPedido.CRIADO) {
+	        	pedidoModel.add(linksConstructor.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+	        	
+	        	pedidoModel.add(linksConstructor.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+	        }else if (pedido.getStatus()==StatusPedido.CONFIRMADO){
+	        	pedidoModel.add(linksConstructor.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+	        }            
+        }
         
         pedidoModel.getRestaurante().add(
         		linksConstructor.linkToRestaurante(pedido.getRestaurante().getId()));
