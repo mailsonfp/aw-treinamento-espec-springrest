@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -35,4 +36,7 @@ public interface RestauranteRepository
 	
 	//@Query("from Restaurante where nome like %:nome% and cozinha.id = :cozinhaId")
 	List<Restaurante> consultarPorNomeId(String nome, @Param("cozinhaId") Long cozinhaId);
+	
+	@Query("select case when count(1) > 0 then true else false end from Restaurante rest join rest.responsaveis resp where rest.id = :restauranteId and resp.id = :usuarioId")
+	public boolean queryReponsavelRestaurante(Long restauranteId, Long usuarioId);
 }

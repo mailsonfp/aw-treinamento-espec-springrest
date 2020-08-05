@@ -12,6 +12,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +56,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	@GetMapping	
 	public CollectionModel<CozinhaModelOutput>  listar(){
 		logger.info("Listando cozinhas sem paginação");
+		logger.info(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		return cozinhaModelOut.toCollectionModel(cadastroCozinhaService.listar());
 	}
 	

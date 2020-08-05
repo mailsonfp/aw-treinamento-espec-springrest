@@ -10,4 +10,5 @@ public interface ResturanteRepositoryCustom {
 	List<Restaurante> findByNomeAndTaxaEntrega(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal);
 	List<Restaurante> findByNomeAndTaxaEntregaCriteria(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal);
 	List<Restaurante> findComFreteGratis(String nome);
+	
 }

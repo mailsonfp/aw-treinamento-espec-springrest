@@ -30,6 +30,7 @@ import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
 import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.core.security.AlgaSecurity;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityPedido;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.filter.PedidoModelFilter;
@@ -85,6 +86,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	 * return pedidosWrapper; }
 	 */
     
+    @CheckSecurityPedido.PermitePesquisar
     @GetMapping
     public CollectionModel<PedidoResumoModelOutput> listar() {
         List<Pedido> todosPedidos = pedidoService.listar();
@@ -92,6 +94,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoResumoModelOut.toCollectionModel(todosPedidos);
     }
     
+    @CheckSecurityPedido.PermitePesquisar
     @GetMapping("pesquisa")
     public PagedModel<PedidoResumoModelOutput> listarUsandoFiltros(PedidoModelFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
         Pageable pageableTraduzido = traduzirPageable(pageable);
@@ -102,6 +105,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelOut);
     }
 
+    @CheckSecurityPedido.PermiteBuscar
     @GetMapping("/{pedidoCodigo}")
     public PedidoModelOutput buscar(@PathVariable String pedidoCodigo) {
         Pedido pedido = emissaoPedido.buscarThrow(pedidoCodigo);
@@ -109,6 +113,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoModelOut.toModel(pedido);
     }    
     
+    @CheckSecurityPedido.PermiteCriar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoModelOutput adicionar(@Valid @RequestBody PedidoModelInput pedidoInput) {

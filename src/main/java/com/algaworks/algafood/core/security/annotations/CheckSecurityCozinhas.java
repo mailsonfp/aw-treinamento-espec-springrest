@@ -10,14 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public @interface CheckSecurityCozinhas {
 	 
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
 	@Retention(RUNTIME)
 	@Target(METHOD)
 	public @interface PermiteConsultar {
 
 	}
 	
-	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+	@PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_COZINHAS')")
 	@Retention(RUNTIME)
 	@Target(METHOD)
 	public @interface PermiteEditar {

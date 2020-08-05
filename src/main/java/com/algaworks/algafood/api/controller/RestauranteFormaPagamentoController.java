@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.output.FormaPagamentoModelOutputAssembler;
 import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityRestaurante;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
@@ -27,6 +28,7 @@ public class RestauranteFormaPagamentoController {
 	@Autowired
 	private FormaPagamentoModelOutputAssembler formaPagamentoOut;
 	
+	@CheckSecurityRestaurante.PermiteConsultar
 	@GetMapping
 	public List<FormaPagamentoModelOutput> listar(@PathVariable Long restauranteId){
 		Restaurante restaurante = cadastroRestauranteService.buscarThrow(restauranteId);
@@ -34,12 +36,14 @@ public class RestauranteFormaPagamentoController {
 		return formaPagamentoOut.toCollectionModel(restaurante.getFormasPagamento());
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		cadastroRestauranteService.associarFormaPagamento(restauranteId, formaPagamentoId);
 	}
 	
+	@CheckSecurityRestaurante.PermiteGerenciarFuncionamento
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {

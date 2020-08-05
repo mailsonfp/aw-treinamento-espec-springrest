@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.output.GrupoModelOutputAssembler;
 import com.algaworks.algafood.api.model.output.GrupoModelOutput;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityUsuariosGruposPermissoes;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 
@@ -27,6 +28,7 @@ public class UsuarioGrupoController {
     @Autowired
     private GrupoModelOutputAssembler grupoModelOut;
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteConsultar
     @GetMapping
     public List<GrupoModelOutput> listar(@PathVariable Long usuarioId) {
         Usuario usuario = cadastroUsuario.buscarThrow(usuarioId);
@@ -34,12 +36,14 @@ public class UsuarioGrupoController {
         return grupoModelOut.toCollectionModel(usuario.getGrupos());
     }
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteEditar
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.desassociarGrupo(usuarioId, grupoId);
     }
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteEditar
     @PutMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {

@@ -22,6 +22,7 @@ import com.algaworks.algafood.api.assembler.output.GrupoModelOutputAssembler;
 import com.algaworks.algafood.api.model.input.GrupoModelInput;
 import com.algaworks.algafood.api.model.output.GrupoModelOutput;
 import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
+import com.algaworks.algafood.core.security.annotations.CheckSecurityUsuariosGruposPermissoes;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
@@ -42,6 +43,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     @Autowired
     private GrupoModelInputAssembler grupoModeIn;
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteConsultar
     @GetMapping
     public List<GrupoModelOutput> listar() {
         List<Grupo> todosGrupos = grupoRepository.findAll();
@@ -49,6 +51,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelOut.toCollectionModel(todosGrupos);
     }
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteConsultar
     @GetMapping("/{grupoId}")
     public GrupoModelOutput buscar(@PathVariable Long grupoId) {
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
@@ -56,6 +59,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelOut.toModel(grupo);
     }
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModelOutput adicionar(@RequestBody @Valid GrupoModelInput grupoInput) {
@@ -66,6 +70,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelOut.toModel(grupo);
     }
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteEditar
     @PutMapping("/{grupoId}")
     public GrupoModelOutput atualizar(@PathVariable Long grupoId,
             @RequestBody @Valid GrupoModelInput grupoInput) {
@@ -78,6 +83,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelOut.toModel(grupoAtual);
     }
     
+    @CheckSecurityUsuariosGruposPermissoes.PermiteEditar
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long grupoId) {
