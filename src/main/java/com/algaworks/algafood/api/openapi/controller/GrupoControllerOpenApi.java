@@ -2,7 +2,7 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import java.util.List;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.input.GrupoModelInput;
 import com.algaworks.algafood.api.model.output.GrupoModelOutput;
 

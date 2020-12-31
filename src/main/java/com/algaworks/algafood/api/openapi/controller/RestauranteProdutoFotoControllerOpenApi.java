@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
 import com.algaworks.algafood.api.assembler.input.ProdutoFotoModelInput;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.output.ProdutoFotoModelOutput;
 
 import io.swagger.annotations.Api;

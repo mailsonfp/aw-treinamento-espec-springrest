@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.input.RestauranteModelInput;
 import com.algaworks.algafood.api.model.output.RestauranteApenasNomeModel;
 import com.algaworks.algafood.api.model.output.RestauranteBasicoModel;
