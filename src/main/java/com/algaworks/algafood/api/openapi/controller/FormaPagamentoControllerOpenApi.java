@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.input.FormaPagamentoModelInput;
 import com.algaworks.algafood.api.model.output.FormaPagamentoModelOutput;
 import com.algaworks.algafood.api.openapi.model.FormasPagamentoModelOpenApi;

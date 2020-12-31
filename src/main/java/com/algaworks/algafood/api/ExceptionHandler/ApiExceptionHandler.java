@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.ExceptionHandler;
+package com.algaworks.algafood.api.exceptionhandler;
 
 import java.util.List;
 import java.util.stream.Collectors;

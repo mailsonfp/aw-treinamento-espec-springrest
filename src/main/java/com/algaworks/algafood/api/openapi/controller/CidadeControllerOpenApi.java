@@ -2,7 +2,7 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import org.springframework.hateoas.CollectionModel;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.input.CidadeModelInput;
 import com.algaworks.algafood.api.model.output.CidadeModelOutput;
 

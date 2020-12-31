@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.output.CidadeModelOutput;
 import com.algaworks.algafood.api.model.output.CozinhaModelOutput;
 import com.algaworks.algafood.api.model.output.EstadoModelOutput;

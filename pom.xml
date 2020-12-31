@@ -15,7 +15,7 @@
 	<description>Projeto treinamento Especialista Spring Rest</description>
 
 	<properties>
-		<java.version>14</java.version>
+		<java.version>15</java.version>
 		<modelmapper.version>2.3.0</modelmapper.version>
 		<squiggly.version>1.3.18</squiggly.version>
 		<jasperreports.version>6.13.0</jasperreports.version>

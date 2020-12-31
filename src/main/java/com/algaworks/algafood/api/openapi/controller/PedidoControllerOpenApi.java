@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 
-import com.algaworks.algafood.api.ExceptionHandler.Problema;
+import com.algaworks.algafood.api.exceptionhandler.Problema;
 import com.algaworks.algafood.api.model.input.PedidoModelInput;
 import com.algaworks.algafood.api.model.output.PedidoModelOutput;
 import com.algaworks.algafood.api.model.output.PedidoResumoModelOutput;
