@@ -109,7 +109,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, UsuarioModelOutput.class),UsuariosModelOpenApi.class))
 				.securitySchemes(Arrays.asList(getSecurityScheme()))
 				.securityContexts(Arrays.asList(getSecurityContext()))
-				.apiInfo(getApiInfo())
+				.apiInfo(getApiInfo())				
 				.tags(
 					new Tag("Cidades", "Responsável por armazenar todos os endpoints pertencentes a cidades"),
 					new Tag("Grupos", "Responsável por armazenar todos os endpoints pertencentes a Grupos de Usuário"),
@@ -126,7 +126,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 					.name("Algafood")
 					.grantTypes(getGrantTypes())
 					.scopes(getScopes())
-				.build();
+					.build();
 	}
 	
 	private SecurityContext getSecurityContext() {
@@ -142,12 +142,12 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 	}
 	
 	private List<GrantType> getGrantTypes(){
-		return Arrays.asList(new ResourceOwnerPasswordCredentialsGrant("http://localhost:8081/oauth/token"));
+		return Arrays.asList(new ResourceOwnerPasswordCredentialsGrant("http://localhost:8080/oauth/token"));
 	}
 	
 	private List<AuthorizationScope> getScopes(){
-		return Arrays.asList(new AuthorizationScope("Read", "Acesso de Leitura"),
-				new AuthorizationScope("Write", "Acesso de Escrita"));
+		return Arrays.asList(new AuthorizationScope("READ", "Acesso de Leitura"),
+				new AuthorizationScope("WRITE", "Acesso de Escrita"));
 	}
 	
 	private List<ResponseMessage> getGlobalResponseMessage(){
