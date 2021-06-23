@@ -5,6 +5,9 @@ WORKDIR /app
 ARG JAR_FILE
 
 COPY target/${JAR_FILE} /app/api.jar
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 8080
 
