@@ -13,15 +13,26 @@ services:
       - "3306:3306"
     networks:
       - algafood-network
-
+    volumes:
+      - volume-mysqldocker:/var/lib/mysql
+  
+  algafood-redis:
+    image: redis:6.2.1-alpine
+    networks:
+      - algafood-network
+  
   algafood-api:
     image: algafood-api
     entrypoint: ["/docker-entrypoint.sh", "algafood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: algafood-mysql
+      SPRING_SESSION_STORE_TYPE: redis
+      SPRING_REDIS_HOST: algafood-redis
     ports:
       - "8080:8080"
     networks:
       - algafood-network
     depends_on:
       - algafood-mysql
+volumes:
+  volume-mysqldocker:
